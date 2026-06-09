@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SportsTrack</title>
   <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest' disable-menu='true' clear-log='true'></script>
@@ -25,7 +26,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 32px;
+      gap: clamp(12px, 3vw, 32px);
       z-index: 999;
       transition: opacity 0.6s ease;
     }
@@ -36,9 +37,9 @@
 
     .brand { display: flex; flex-direction: column; align-items: center; gap: 6px; }
     .brand-name {
-      font-size: 32px;
+      font-size: clamp(14px, 4vw, 32px);
       font-weight: 800;
-      letter-spacing: 3px;
+      letter-spacing: clamp(1px, 0.5vw, 3px);
       text-transform: uppercase;
       background: linear-gradient(90deg, #ffffff 0%, #7777ff 50%, #ffffff 100%);
       background-size: 200% auto;
@@ -46,14 +47,18 @@
       -webkit-text-fill-color: transparent;
       animation: shimmer 2.5s linear infinite;
     }
-    .brand-sub { font-size: 11px; letter-spacing: 6px; text-transform: uppercase; color: #444; }
+    .brand-sub { font-size: clamp(8px, 1.2vw, 11px); letter-spacing: clamp(2px, 0.8vw, 6px); text-transform: uppercase; color: #444; }
 
     @keyframes shimmer {
       0%   { background-position: 200% center; }
       100% { background-position: -200% center; }
     }
 
-    .track-wrap { position: relative; width: 220px; height: 220px; }
+    .track-wrap {
+      position: relative;
+      width: clamp(80px, 20vmin, 220px);
+      height: clamp(80px, 20vmin, 220px);
+    }
 
     .ring-outer {
       position: absolute; inset: 0; border-radius: 50%;
@@ -62,13 +67,13 @@
       animation: spin 1.2s linear infinite;
     }
     .ring-mid {
-      position: absolute; inset: 20px; border-radius: 50%;
+      position: absolute; inset: 9%; border-radius: 50%;
       border: 2px solid transparent;
       border-bottom-color: #aaaaff; border-left-color: #aaaaff33;
       animation: spin-reverse 1.8s linear infinite;
     }
     .ring-inner {
-      position: absolute; inset: 40px; border-radius: 50%;
+      position: absolute; inset: 18%; border-radius: 50%;
       border: 1px solid transparent;
       border-top-color: #ffffff44; border-right-color: #ffffff22;
       animation: spin 2.4s linear infinite;
@@ -81,7 +86,7 @@
     .play-triangle {
       width: 0; height: 0;
       border-style: solid;
-      border-width: 18px 0 18px 30px;
+      border-width: clamp(8px, 2vmin, 18px) 0 clamp(8px, 2vmin, 18px) clamp(14px, 3vmin, 30px);
       border-color: transparent transparent transparent #5555ff;
       margin-left: 6px;
       animation: pulse-icon 1.5s ease-in-out infinite;
@@ -93,13 +98,13 @@
 
     .orbit { position: absolute; inset: 0; animation: spin 1.2s linear infinite; }
     .orbit-dot {
-      position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
-      width: 8px; height: 8px;
+      position: absolute; top: 3%; left: 50%; transform: translateX(-50%);
+      width: clamp(4px, 1vmin, 8px); height: clamp(4px, 1vmin, 8px);
       background: #fff; border-radius: 50%;
       box-shadow: 0 0 8px #5555ff, 0 0 20px #5555ff88;
     }
 
-    .load-bar-wrap { width: 200px; height: 2px; background: #1a1a2a; border-radius: 2px; overflow: hidden; }
+    .load-bar-wrap { width: clamp(80px, 30vw, 200px); height: 2px; background: #1a1a2a; border-radius: 2px; overflow: hidden; }
     .load-bar {
       height: 100%;
       background: linear-gradient(90deg, #5555ff, #aaaaff);
@@ -113,7 +118,7 @@
     }
 
     .load-text {
-      font-size: 11px; letter-spacing: 3px; color: #333; text-transform: uppercase;
+      font-size: clamp(8px, 1.5vw, 11px); letter-spacing: clamp(1px, 0.5vw, 3px); color: #333; text-transform: uppercase;
       animation: blink 1.5s ease-in-out infinite;
     }
     @keyframes blink {

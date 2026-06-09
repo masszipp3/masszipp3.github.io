@@ -22,25 +22,29 @@
       background: #05050f;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      gap: 32px; z-index: 999;
+      gap: clamp(12px, 3vw, 32px); z-index: 999;
       transition: opacity 0.6s ease;
     }
     #loader.fade-out { opacity: 0; pointer-events: none; }
     .brand { display: flex; flex-direction: column; align-items: center; gap: 6px; }
     .brand-name {
-      font-size: 32px; font-weight: 800;
-      letter-spacing: 3px; text-transform: uppercase;
+      font-size: clamp(14px, 4vw, 32px); font-weight: 800;
+      letter-spacing: clamp(1px, 0.5vw, 3px); text-transform: uppercase;
       background: linear-gradient(90deg, #fff 0%, #7777ff 50%, #fff 100%);
       background-size: 200% auto;
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       animation: shimmer 2.5s linear infinite;
     }
-    .brand-sub { font-size: 11px; letter-spacing: 6px; text-transform: uppercase; color: #444; }
+    .brand-sub { font-size: clamp(8px, 1.2vw, 11px); letter-spacing: clamp(2px, 0.8vw, 6px); text-transform: uppercase; color: #444; }
     @keyframes shimmer {
       0%   { background-position: 200% center; }
       100% { background-position: -200% center; }
     }
-    .track-wrap { position: relative; width: 180px; height: 180px; }
+    .track-wrap {
+      position: relative;
+      width: clamp(80px, 20vmin, 180px);
+      height: clamp(80px, 20vmin, 180px);
+    }
     .ring-outer {
       position: absolute; inset: 0; border-radius: 50%;
       border: 2px solid transparent;
@@ -48,13 +52,13 @@
       animation: spin 1.2s linear infinite;
     }
     .ring-mid {
-      position: absolute; inset: 20px; border-radius: 50%;
+      position: absolute; inset: 11%; border-radius: 50%;
       border: 2px solid transparent;
       border-bottom-color: #aaaaff; border-left-color: #aaaaff33;
       animation: spin-rev 1.8s linear infinite;
     }
     .ring-inner {
-      position: absolute; inset: 40px; border-radius: 50%;
+      position: absolute; inset: 22%; border-radius: 50%;
       border: 1px solid transparent; border-top-color: #ffffff44;
       animation: spin 2.4s linear infinite;
     }
@@ -63,7 +67,7 @@
     .center-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
     .play-tri {
       width: 0; height: 0; border-style: solid;
-      border-width: 16px 0 16px 26px;
+      border-width: clamp(8px, 2vmin, 16px) 0 clamp(8px, 2vmin, 16px) clamp(13px, 3vmin, 26px);
       border-color: transparent transparent transparent #5555ff;
       margin-left: 6px;
       animation: pulse 1.5s ease-in-out infinite;
@@ -71,11 +75,12 @@
     @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.85)} }
     .orbit { position: absolute; inset: 0; animation: spin 1.2s linear infinite; }
     .orbit-dot {
-      position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
-      width: 8px; height: 8px; background: #fff; border-radius: 50%;
+      position: absolute; top: 3%; left: 50%; transform: translateX(-50%);
+      width: clamp(4px, 1vmin, 8px); height: clamp(4px, 1vmin, 8px);
+      background: #fff; border-radius: 50%;
       box-shadow: 0 0 8px #5555ff, 0 0 20px #5555ff88;
     }
-    .load-bar-wrap { width: 200px; height: 2px; background: #1a1a2a; border-radius: 2px; overflow: hidden; }
+    .load-bar-wrap { width: clamp(80px, 30vw, 200px); height: 2px; background: #1a1a2a; border-radius: 2px; overflow: hidden; }
     .load-bar {
       height: 100%; background: linear-gradient(90deg, #5555ff, #aaaaff);
       border-radius: 2px; animation: lbar 1.8s ease-in-out infinite;
@@ -86,7 +91,7 @@
       100%{ width:0%;  margin-left:100%; }
     }
     .load-text {
-      font-size: 11px; letter-spacing: 3px; color: #333;
+      font-size: clamp(8px, 1.5vw, 11px); letter-spacing: clamp(1px, 0.5vw, 3px); color: #333;
       text-transform: uppercase; animation: blink 1.5s ease-in-out infinite;
     }
     @keyframes blink { 0%,100%{opacity:.4} 50%{opacity:1} }
@@ -150,19 +155,20 @@
     /* Bottom bar */
     #bottom-bar {
       display: flex; align-items: center;
-      gap: 6px; padding: 0 10px 10px;
+      gap: clamp(2px, 1vw, 6px);
+      padding: 0 clamp(6px, 2vw, 10px) clamp(6px, 1.5vw, 10px);
     }
 
     .btn {
       background: none; border: none; color: #fff;
-      cursor: pointer; padding: 6px 8px;
-      border-radius: 5px; font-size: 17px;
+      cursor: pointer; padding: clamp(4px, 1vw, 6px) clamp(4px, 1vw, 8px);
+      border-radius: 5px; font-size: clamp(13px, 2.5vw, 17px);
       line-height: 1; flex-shrink: 0;
       transition: background 0.15s;
       display: flex; align-items: center; justify-content: center;
     }
     .btn:hover { background: rgba(255,255,255,0.15); }
-    .btn svg { width: 18px; height: 18px; fill: #fff; }
+    .btn svg { width: clamp(14px, 2.5vw, 18px); height: clamp(14px, 2.5vw, 18px); fill: #fff; }
 
     /* Volume */
     #vol-wrap {
@@ -177,19 +183,19 @@
     }
     #vol-wrap:hover #vol-slider,
     #vol-wrap:focus-within #vol-slider {
-      width: 70px; opacity: 1;
+      width: clamp(40px, 8vw, 70px); opacity: 1;
     }
 
     /* Time */
     #time-txt {
-      font-size: 12px; color: #ccc;
+      font-size: clamp(9px, 1.5vw, 12px); color: #ccc;
       white-space: nowrap; flex-shrink: 0;
       margin-left: 4px;
     }
 
     /* Live badge */
     #live-badge {
-      font-size: 10px; font-weight: 700;
+      font-size: clamp(8px, 1.2vw, 10px); font-weight: 700;
       letter-spacing: 1px; color: #fff;
       background: #e00; padding: 2px 7px;
       border-radius: 3px; flex-shrink: 0;
@@ -199,7 +205,7 @@
 
     /* Quality selector */
     #quality-wrap { position: relative; }
-    #quality-btn { font-size: 12px; letter-spacing: 0.5px; padding: 5px 8px; }
+    #quality-btn { font-size: clamp(9px, 1.5vw, 12px); letter-spacing: 0.5px; padding: clamp(3px, 0.8vw, 5px) clamp(4px, 1vw, 8px); }
     #quality-menu {
       display: none;
       position: absolute;
@@ -208,15 +214,14 @@
       border: 1px solid #333;
       border-radius: 6px;
       overflow: hidden;
-      min-width: 110px;
+      min-width: clamp(80px, 15vw, 110px);
       z-index: 10;
     }
     #quality-menu.open { display: block; }
     .q-item {
-      padding: 8px 14px;
-      font-size: 12px; color: #ccc;
-      cursor: pointer;
-      white-space: nowrap;
+      padding: clamp(5px, 1.2vw, 8px) clamp(8px, 2vw, 14px);
+      font-size: clamp(10px, 1.5vw, 12px); color: #ccc;
+      cursor: pointer; white-space: nowrap;
     }
     .q-item:hover { background: rgba(85,85,255,0.3); color: #fff; }
     .q-item.active { color: #5555ff; font-weight: 600; }

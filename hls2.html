@@ -227,7 +227,7 @@
   //           ?dtv=<m3u8-link>   — alias (backwards compat)
   //           ?src=<m3u8-link>   — alias
   const params     = new URLSearchParams(window.location.search);
-  const DIRECT_SRC = params.get('get') || params.get('dtv') || params.get('src') || '';
+  const DIRECT_SRC = params.get('url') || params.get('stream') || params.get('get') || params.get('dtv') || params.get('src') || ''; // supports ?url=, ?stream=, ?get=, ?dtv=, ?src=
 
   const video    = document.getElementById('player');
   const loader   = document.getElementById('loader');
@@ -261,6 +261,8 @@
   }
 
   function showPlayer(){
+    clearBootTimeout();
+    clearBootTimeout();
     clearInterval(msgTimer);
     loader.classList.add('off');
     mountWm();
@@ -271,6 +273,14 @@
     clearInterval(msgTimer);
     loader.classList.add('off');
     errBox.classList.add('on');
+  }
+
+  const bootTimeout = setTimeout(() => {
+    showError('Player did not load. Check if the stream URL is valid, CORS is allowed, and the .m3u8 is reachable.');
+  }, 12000);
+
+  function clearBootTimeout(){
+    try { clearTimeout(bootTimeout); } catch(_) {}
   }
 
   // ── Auto landscape on fullscreen ──
@@ -374,8 +384,8 @@
       if (plyr) { try { plyr.destroy(); } catch(e){} plyr = null; }
       plyr = new Plyr(video, {
         controls: qualities.length > 1
-          ? ['play-large','play','mute','volume','settings','fullscreen']
-          : ['play-large','play','mute','volume','fullscreen'],
+          ? ['play-large','play','progress','current-time','mute','volume','settings','fullscreen']
+          : ['play-large','play','progress','current-time','mute','volume','fullscreen'],
         settings: ['quality'],
         quality: {
           default:  qualities[0] || 'default',
@@ -491,6 +501,5 @@
 
 })();
 </script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"9d439fd657464c3396945543c60cfa19","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>

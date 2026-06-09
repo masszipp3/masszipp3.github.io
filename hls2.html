@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>SPORTSTRACK LIVE</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="description" content="Live match stream player">
+  <meta name="author" content="SportsTrack">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <link rel="preconnect" href="https://cdn.plyr.io" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
+  <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    document.addEventListener("contextmenu", e => e.preventDefault(), false);
+    document.addEventListener("keydown", e => {
+      if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) e.preventDefault();
+      if (e.ctrlKey && e.keyCode === 85) e.preventDefault();
+      if (e.keyCode === 123) e.preventDefault();
+    }, false);
+  </script>
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    :root{
+      --red:      #00e676;
+      --red-glow: rgba(0,230,118,0.55);
+      --bg:       #040506;
+      --bg2:      #0c0e11;
+      --border:   rgba(0,230,118,0.22);
+      --text:     #c8d0da;
+    }
+
+    html,body{width:100%;height:100%;background:var(--bg);overflow:hidden;font-family:'Rajdhani',sans-serif}
+
+    /* ── PLAYER ── */
+    #player-wrap{width:100%;height:100%;position:relative;background:#000}
+    video{width:100%;height:100%;display:block}
+    .plyr{
+      width:100%!important;height:100%!important;
+      --plyr-color-main:var(--red);
+      --plyr-video-background:#000;
+      --plyr-font-family:'Rajdhani',sans-serif;
+      --plyr-control-radius:3px;
+      font-weight:600;position:relative
+    }
+    .plyr--video,.plyr__video-wrapper{height:100%!important}
+    .plyr video{height:100%!important;object-fit:contain}
+
+    /* corner accents */
+    .ca{position:absolute;width:20px;height:20px;z-index:101;pointer-events:none}
+    .ca.tl{top:0;left:0;border-top:2px solid var(--red);border-left:2px solid var(--red)}
+    .ca.tr{top:0;right:0;border-top:2px solid var(--red);border-right:2px solid var(--red)}
+    .ca.bl{bottom:0;left:0;border-bottom:2px solid var(--red);border-left:2px solid var(--red)}
+    .ca.br{bottom:0;right:0;border-bottom:2px solid var(--red);border-right:2px solid var(--red)}
+
+    /* ── JOIN US BUTTON ── */
+    #join-btn{
+      position:absolute;top:6px;left:5px;z-index:102;
+      display:block;
+      height:30px;width:100px;
+      color:#ccc;border:2px solid #ccc;
+      padding:1px 0;border-radius:2px;
+      text-align:center;text-decoration:none;
+      font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;
+      line-height:26px;letter-spacing:1px;
+      background:rgba(0,0,0,0.35);
+      transition:color .2s,border-color .2s,background .2s
+    }
+    #join-btn:hover{color:#fff;border-color:#fff;background:rgba(0,0,0,0.55)}
+
+    /* ── WATERMARK ── */
+    #wm{
+      position:absolute;bottom:62px;left:50%;transform:translateX(-50%);
+      z-index:200;pointer-events:none;user-select:none;
+      display:flex;align-items:center;gap:8px;
+      opacity:.42;transition:opacity .5s
+    }
+    .plyr--hide-controls #wm{opacity:.28}
+    :fullscreen #wm,:-webkit-full-screen #wm,:-moz-full-screen #wm{opacity:.5;bottom:70px}
+    .wm-rule{width:18px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,230,118,.75))}
+    .wm-rule.r{background:linear-gradient(90deg,rgba(0,230,118,.75),transparent)}
+    .wm-inner{display:flex;flex-direction:column;align-items:center;gap:1px}
+    .wm-name{
+      font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:4px;
+      line-height:1;color:#fff;white-space:nowrap;
+      text-shadow:0 1px 8px #000,0 0 24px rgba(0,0,0,.8)
+    }
+    .wm-name .r{color:var(--red)}
+    .wm-url{
+      font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:600;
+      letter-spacing:3px;color:rgba(255,255,255,.55);white-space:nowrap;
+      text-shadow:0 1px 6px rgba(0,0,0,.9);text-transform:uppercase
+    }
+
+    /* ── SPORTSTRACK LOADER ── */
+    #loader{
+      position:fixed;inset:0;z-index:9999;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(0,230,118,.14), transparent 32%),
+        linear-gradient(135deg,#050707 0%,#0b1110 45%,#020303 100%);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+      overflow:hidden;transition:opacity .6s,visibility .6s
+    }
+    #loader::before{
+      content:"";position:absolute;inset:-20%;
+      background:
+        linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+      background-size:42px 42px;
+      transform:perspective(500px) rotateX(62deg) translateY(80px);
+      animation:gridMove 2.8s linear infinite;opacity:.42
+    }
+    #loader::after{
+      content:"";position:absolute;width:260px;height:260px;border-radius:50%;
+      border:1px solid rgba(0,230,118,.18);box-shadow:0 0 60px rgba(0,230,118,.14) inset;
+      animation:pulseRing 2.2s ease-in-out infinite
+    }
+    #loader.off{opacity:0;visibility:hidden}
+    @keyframes gridMove{to{background-position:0 42px,42px 0}}
+    @keyframes pulseRing{0%,100%{transform:scale(.92);opacity:.35}50%{transform:scale(1.08);opacity:.75}}
+
+    .ld-logo{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px;animation:float 2s ease-in-out infinite}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    .ld-ball{
+      width:74px;height:74px;border-radius:50%;position:relative;
+      background:
+        radial-gradient(circle at 34% 28%,#fff 0 8%,transparent 9%),
+        radial-gradient(circle at 50% 50%,rgba(0,230,118,.22),rgba(0,0,0,.15) 62%),
+        #101514;
+      border:2px solid rgba(0,230,118,.85);
+      box-shadow:0 0 26px rgba(0,230,118,.5), inset 0 0 18px rgba(0,230,118,.2);
+      animation:ballSpin 1.4s linear infinite
+    }
+    .ld-ball::before,.ld-ball::after{content:"";position:absolute;inset:14px;border:2px solid rgba(255,255,255,.35);border-radius:50%}
+    .ld-ball::after{inset:26px;border-color:rgba(0,230,118,.75);box-shadow:0 0 10px rgba(0,230,118,.65)}
+    @keyframes ballSpin{to{transform:rotate(360deg)}}
+    .ld-wm{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:5px;color:#fff;line-height:1;text-shadow:0 0 24px rgba(0,230,118,.25)}
+    .ld-wm .r{color:var(--red)}
+    .ld-domain{font-size:11px;font-weight:700;letter-spacing:5px;color:rgba(255,255,255,.42);text-transform:uppercase}
+
+    .ld-bar-wrap{position:relative;z-index:1;width:240px;height:3px;background:rgba(255,255,255,.09);border-radius:10px;overflow:hidden}
+    .ld-bar{height:100%;background:linear-gradient(90deg,transparent,var(--red),#9dffd0,transparent);box-shadow:0 0 16px var(--red-glow);animation:barSlide 1.25s ease-in-out infinite}
+    @keyframes barSlide{0%{width:0%;margin-left:0}50%{width:88%;margin-left:6%}100%{width:0%;margin-left:100%}}
+
+    .ld-dots{position:relative;z-index:1;display:flex;gap:7px}
+    .ld-dot{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red-glow);animation:dotBounce 1.2s ease-in-out infinite}
+    .ld-dot:nth-child(2){animation-delay:.2s}.ld-dot:nth-child(3){animation-delay:.4s}
+    @keyframes dotBounce{0%,80%,100%{opacity:.25;transform:translateY(0) scale(.8)}40%{opacity:1;transform:translateY(-6px) scale(1.15)}}
+
+    .ld-status{position:relative;z-index:1;font-size:11px;font-weight:700;letter-spacing:3px;color:rgba(200,255,225,.58);text-transform:uppercase;animation:blink 2s ease-in-out infinite}
+    @keyframes blink{0%,100%{opacity:.45}50%{opacity:1}}
+
+    /* ── ERROR ── */
+    #err{
+      position:absolute;inset:0;display:none;flex-direction:column;
+      align-items:center;justify-content:center;gap:16px;
+      background:var(--bg);z-index:300
+    }
+    #err.on{display:flex}
+    .err-icon{font-size:48px;color:var(--red);opacity:.7}
+    .err-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:#fff}
+    .err-msg{font-size:13px;color:var(--text);letter-spacing:1px;text-align:center;max-width:260px;line-height:1.6}
+    .err-retry{
+      margin-top:8px;padding:10px 28px;background:var(--red);color:#fff;
+      border:none;border-radius:3px;font-family:'Rajdhani',sans-serif;
+      font-weight:700;font-size:14px;letter-spacing:3px;text-transform:uppercase;
+      cursor:pointer;transition:background .2s,box-shadow .2s
+    }
+    .err-retry:hover{background:#00c767;box-shadow:0 0 20px var(--red-glow)}
+  </style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-logo">
+    <div class="ld-ball" aria-hidden="true"></div>
+    <div class="ld-wm">SPORTS<span class="r">TRACK</span></div>
+    <div class="ld-domain">Live Match Center</div>
+  </div>
+  <div class="ld-bar-wrap"><div class="ld-bar"></div></div>
+  <div class="ld-dots"><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div></div>
+  <div class="ld-status" id="ld-status">Connecting to stream…</div>
+</div>
+
+<!-- PLAYER -->
+<div id="player-wrap">
+  <div class="ca tl"></div><div class="ca tr"></div>
+  <div class="ca bl"></div><div class="ca br"></div>
+
+  <a id="join-btn" href="https://whatsapp.com/channel/0029Vb6vbGY7dmeVPxhTDm38" target="_blank">Join us</a>
+
+  <div id="err">
+    <div class="err-icon">⚡</div>
+    <div class="err-title">Stream Unavailable</div>
+    <div class="err-msg" id="err-msg">The stream may have ended or the link expired.</div>
+    <button class="err-retry" onclick="location.reload()">Retry</button>
+  </div>
+
+  <video id="player" controls playsinline></video>
+</div>
+
+<!-- WATERMARK (moved inside .plyr by JS) -->
+<div id="wm">
+  <div class="wm-rule"></div>
+  <div class="wm-inner">
+    <div class="wm-name">SPORTS<span class="r">TRACK</span></div>
+    <div class="wm-url">sportstrack.live</div>
+  </div>
+  <div class="wm-rule r"></div>
+</div>
+
+<script>
+(function(){
+  // ── URL Parameter ──
+  // Supports: ?url=<m3u8-link>   — primary (easy to remember)
+  //           ?dtv=<m3u8-link>   — alias (backwards compat)
+  //           ?src=<m3u8-link>   — alias
+  const params     = new URLSearchParams(window.location.search);
+  const DIRECT_SRC = params.get('get') || params.get('dtv') || params.get('src') || '';
+
+  const video    = document.getElementById('player');
+  const loader   = document.getElementById('loader');
+  const errBox   = document.getElementById('err');
+  const errMsg   = document.getElementById('err-msg');
+  const statusEl = document.getElementById('ld-status');
+  const wm       = document.getElementById('wm');
+
+  if (!DIRECT_SRC) {
+    errMsg.textContent = 'No stream URL provided. Add ?url=<m3u8-link> to the page URL.';
+    showError();
+    return;
+  }
+
+  // Cycle loading status text
+  const MSGS = ['Starting SportsTrack…','Fetching match feed…','Preparing live player…','Almost ready…'];
+  let msgIdx = 0;
+  const msgTimer = setInterval(() => {
+    msgIdx = (msgIdx + 1) % MSGS.length;
+    statusEl.textContent = MSGS[msgIdx];
+  }, 1400);
+
+  let hls  = null;
+  let plyr = null;
+
+  const MAX_HEIGHT = 720;
+
+  function mountWm(){
+    const p = document.querySelector('.plyr');
+    if (p && !p.contains(wm)) { p.style.position = 'relative'; p.appendChild(wm); }
+  }
+
+  function showPlayer(){
+    clearInterval(msgTimer);
+    loader.classList.add('off');
+    mountWm();
+  }
+
+  function showError(msg){
+    if (msg) errMsg.textContent = msg;
+    clearInterval(msgTimer);
+    loader.classList.add('off');
+    errBox.classList.add('on');
+  }
+
+  // ── Auto landscape on fullscreen ──
+  function lockLandscape(){
+    const scr = screen.orientation || screen.msOrientation;
+    if (scr && scr.lock) scr.lock('landscape').catch(() => {});
+    else if (screen.lockOrientation) screen.lockOrientation('landscape');
+  }
+  function unlockOrientation(){
+    const scr = screen.orientation || screen.msOrientation;
+    if (scr && scr.unlock) scr.unlock();
+    else if (screen.unlockOrientation) screen.unlockOrientation();
+  }
+  document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement) lockLandscape(); else unlockOrientation();
+  });
+  document.addEventListener('webkitfullscreenchange', () => {
+    if (document.webkitFullscreenElement) lockLandscape(); else unlockOrientation();
+  });
+
+  // ── Build Hls.js ──
+  function buildHls(){
+    return new Hls({
+      startLevel:               -1,
+      capLevelToPlayerSize:     false,
+      abrEwmaDefaultEstimate:   2500000,
+      maxBufferLength:          60,
+      maxMaxBufferLength:       120,
+      maxBufferSize:            60 * 1000 * 1000,
+      backBufferLength:         30,
+      maxBufferHole:            0.5,
+      liveSyncDuration:         8,
+      liveMaxLatencyDuration:   15,
+      maxLiveSyncPlaybackRate:  1.05,
+      liveDurationInfinity:     true,
+      abrBandWidthFactor:       0.80,
+      abrBandWidthUpFactor:     0.70,
+      abrEwmaFastLive:          3.0,
+      abrEwmaSlowLive:          9.0,
+      nudgeOffset:              0.2,
+      nudgeMaxRetry:            5,
+      highBufferWatchdogPeriod: 2,
+      fragLoadingMaxRetry:      6,
+      fragLoadingRetryDelay:    400,
+      manifestLoadingMaxRetry:  6,
+      manifestLoadingRetryDelay:500,
+      levelLoadingMaxRetry:     4,
+      startFragPrefetch:        true,
+      maxFragLookUpTolerance:   0.25,
+      enableWorker:             true,
+      lowLatencyMode:           false,
+    });
+  }
+
+  // ── Start Playback ──
+  function startPlayback(srcUrl){
+    // iOS / Safari native HLS
+    if (!Hls.isSupported()){
+      if (video.canPlayType('application/vnd.apple.mpegurl')){
+        video.src = srcUrl;
+        plyr = new Plyr(video, {
+          controls: ['play-large','play','progress','current-time','mute','volume','settings','fullscreen'],
+        });
+        video.play().then(showPlayer).catch(showPlayer);
+      } else {
+        showError('Your browser does not support HLS playback.');
+      }
+      return;
+    }
+
+    if (hls) { try { hls.destroy(); } catch(e){} hls = null; }
+    hls = buildHls();
+    hls.loadSource(srcUrl);
+    hls.attachMedia(video);
+
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      // Cap to MAX_HEIGHT
+      const sortedByHeight = hls.levels
+        .map((l, i) => ({ idx: i, height: l.height || 0, bw: l.bitrate || 0 }))
+        .sort((a, b) => b.height - a.height);
+
+      let lockIdx = -1;
+      const eligible = sortedByHeight.filter(l => l.height <= MAX_HEIGHT && l.height > 0);
+      if (eligible.length) {
+        lockIdx = eligible[0].idx;
+      } else if (sortedByHeight.length) {
+        lockIdx = sortedByHeight[sortedByHeight.length - 1].idx;
+      }
+      if (lockIdx !== -1 && hls.levels.length > 1) {
+        hls.currentLevel = lockIdx;
+      }
+
+      const seen = new Set(), qualities = [];
+      hls.levels.forEach(l => {
+        if (l.height && l.height <= MAX_HEIGHT && !seen.has(l.height)) {
+          seen.add(l.height); qualities.push(l.height);
+        }
+      });
+      qualities.sort((a, b) => b - a);
+
+      if (plyr) { try { plyr.destroy(); } catch(e){} plyr = null; }
+      plyr = new Plyr(video, {
+        controls: qualities.length > 1
+          ? ['play-large','play','mute','volume','settings','fullscreen']
+          : ['play-large','play','mute','volume','fullscreen'],
+        settings: ['quality'],
+        quality: {
+          default:  qualities[0] || 'default',
+          options:  qualities,
+          forced:   true,
+          onChange: q => {
+            let bestIdx = -1, bestBw = 0;
+            hls.levels.forEach((l, i) => {
+              if (l.height === q && l.bitrate > bestBw) { bestBw = l.bitrate; bestIdx = i; }
+            });
+            if (bestIdx !== -1) hls.currentLevel = bestIdx;
+          }
+        },
+        tooltips: { controls: true, seek: false },
+        invertTime: false,
+      });
+
+      video.play().then(showPlayer).catch(showPlayer);
+    });
+
+    // ── Stall recovery watchdog ──
+    let _lastTime = -1, _stalledTicks = 0;
+    const _stallWatchdog = setInterval(() => {
+      if (video.paused || !hls) return;
+      if (video.currentTime === _lastTime) {
+        _stalledTicks++;
+        if (_stalledTicks === 2) {
+          try {
+            const buf = video.buffered;
+            if (buf.length > 0) {
+              const edge = buf.end(buf.length - 1);
+              if (edge > video.currentTime + 0.3) {
+                video.currentTime = edge - 0.3;
+                video.play().catch(() => {});
+                return;
+              }
+            }
+          } catch(_) {}
+          try { hls.startLoad(-1); } catch(_) {}
+        } else if (_stalledTicks === 3) {
+          try { hls.recoverMediaError(); } catch(_) {}
+        } else if (_stalledTicks >= 4) {
+          _stalledTicks = 0;
+          startPlayback(srcUrl);
+        }
+      } else { _stalledTicks = 0; }
+      _lastTime = video.currentTime;
+    }, 3000);
+
+    hls.on(Hls.Events.DESTROYING, () => clearInterval(_stallWatchdog));
+
+    hls.on(Hls.Events.ERROR, (e, data) => {
+      if (!data.fatal) return;
+      console.warn('[Player] fatal', data.type, data.details);
+      switch (data.type) {
+        case Hls.ErrorTypes.NETWORK_ERROR:
+          try { hls.startLoad(); } catch(_){}
+          break;
+        case Hls.ErrorTypes.MEDIA_ERROR:
+          try { hls.recoverMediaError(); } catch(_){}
+          break;
+        default:
+          showError('Stream unavailable. Please retry.');
+      }
+    });
+  }
+
+  // ── Tab visibility recovery ──
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) return;
+    let stalled = false;
+    try {
+      const t = video.currentTime || 0;
+      const b = video.buffered;
+      let inBuffer = false;
+      for (let i = 0; i < b.length; i++) {
+        if (t >= b.start(i) && t <= b.end(i) + 0.5) { inBuffer = true; break; }
+      }
+      stalled = !inBuffer || video.readyState < 2;
+    } catch(e) { stalled = true; }
+
+    if (stalled) {
+      if (hls) { try { hls.destroy(); } catch(_) {} hls = null; }
+      if (plyr) { try { plyr.destroy(); } catch(_) {} plyr = null; }
+      try { video.removeAttribute('src'); video.load(); } catch(_) {}
+      startPlayback(DIRECT_SRC);
+    } else if (video.paused) {
+      video.play().catch(() => {});
+    } else if (hls && typeof hls.liveSyncPosition === 'number') {
+      try {
+        const target = hls.liveSyncPosition;
+        if (target && video.currentTime < target - 20) video.currentTime = target;
+      } catch(e) {}
+    }
+  });
+
+  // ── Watermark fade behaviour ──
+  video.addEventListener('play',  () => { setTimeout(() => { wm.style.opacity = '.30'; }, 3000); });
+  video.addEventListener('pause', () => { wm.style.opacity = '.55'; });
+  document.addEventListener('mousemove', () => {
+    wm.style.opacity = '.55';
+    clearTimeout(window._wmTimer);
+    window._wmTimer = setTimeout(() => { if (!video.paused) wm.style.opacity = '.30'; }, 3000);
+  });
+  document.addEventListener('touchstart', () => {
+    wm.style.opacity = '.55';
+    clearTimeout(window._wmTimer);
+    window._wmTimer = setTimeout(() => { if (!video.paused) wm.style.opacity = '.30'; }, 3000);
+  });
+
+  // ── Boot ──
+  startPlayback(DIRECT_SRC);
+
+})();
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"9d439fd657464c3396945543c60cfa19","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>

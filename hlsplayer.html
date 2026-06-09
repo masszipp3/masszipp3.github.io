@@ -2,28 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
   <title>SportsTrack</title>
   <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest' disable-menu='true' clear-log='true'></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      width: 100%; height: 100%;
-      background: #000;
-      overflow: hidden;
-      font-family: 'Segoe UI', Arial, sans-serif;
-    }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; font-family: 'Segoe UI', Arial, sans-serif; }
 
-    /* ── LOADER ── */
+    /* LOADER */
     #loader {
-      position: fixed; inset: 0;
-      background: #05050f;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: clamp(12px, 3vw, 32px); z-index: 999;
-      transition: opacity 0.6s ease;
+      position: fixed; inset: 0; background: #05050f;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: clamp(12px, 3vw, 32px); z-index: 999; transition: opacity 0.6s ease;
     }
     #loader.fade-out { opacity: 0; pointer-events: none; }
     .brand { display: flex; flex-direction: column; align-items: center; gap: 6px; }
@@ -31,238 +23,100 @@
       font-size: clamp(14px, 4vw, 32px); font-weight: 800;
       letter-spacing: clamp(1px, 0.5vw, 3px); text-transform: uppercase;
       background: linear-gradient(90deg, #fff 0%, #7777ff 50%, #fff 100%);
-      background-size: 200% auto;
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       animation: shimmer 2.5s linear infinite;
     }
     .brand-sub { font-size: clamp(8px, 1.2vw, 11px); letter-spacing: clamp(2px, 0.8vw, 6px); text-transform: uppercase; color: #444; }
-    @keyframes shimmer {
-      0%   { background-position: 200% center; }
-      100% { background-position: -200% center; }
-    }
-    .track-wrap {
-      position: relative;
-      width: clamp(80px, 20vmin, 180px);
-      height: clamp(80px, 20vmin, 180px);
-    }
-    .ring-outer {
-      position: absolute; inset: 0; border-radius: 50%;
-      border: 2px solid transparent;
-      border-top-color: #5555ff; border-right-color: #5555ff33;
-      animation: spin 1.2s linear infinite;
-    }
-    .ring-mid {
-      position: absolute; inset: 11%; border-radius: 50%;
-      border: 2px solid transparent;
-      border-bottom-color: #aaaaff; border-left-color: #aaaaff33;
-      animation: spin-rev 1.8s linear infinite;
-    }
-    .ring-inner {
-      position: absolute; inset: 22%; border-radius: 50%;
-      border: 1px solid transparent; border-top-color: #ffffff44;
-      animation: spin 2.4s linear infinite;
-    }
-    @keyframes spin     { to { transform: rotate(360deg);  } }
+    @keyframes shimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
+    .track-wrap { position: relative; width: clamp(80px, 20vmin, 180px); height: clamp(80px, 20vmin, 180px); }
+    .ring-outer { position: absolute; inset: 0; border-radius: 50%; border: 2px solid transparent; border-top-color: #5555ff; border-right-color: #5555ff33; animation: spin 1.2s linear infinite; }
+    .ring-mid { position: absolute; inset: 11%; border-radius: 50%; border: 2px solid transparent; border-bottom-color: #aaaaff; border-left-color: #aaaaff33; animation: spin-rev 1.8s linear infinite; }
+    .ring-inner { position: absolute; inset: 22%; border-radius: 50%; border: 1px solid transparent; border-top-color: #ffffff44; animation: spin 2.4s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes spin-rev { to { transform: rotate(-360deg); } }
     .center-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-    .play-tri {
-      width: 0; height: 0; border-style: solid;
-      border-width: clamp(8px, 2vmin, 16px) 0 clamp(8px, 2vmin, 16px) clamp(13px, 3vmin, 26px);
-      border-color: transparent transparent transparent #5555ff;
-      margin-left: 6px;
-      animation: pulse 1.5s ease-in-out infinite;
-    }
+    .play-tri { width: 0; height: 0; border-style: solid; border-width: clamp(8px, 2vmin, 16px) 0 clamp(8px, 2vmin, 16px) clamp(13px, 3vmin, 26px); border-color: transparent transparent transparent #5555ff; margin-left: 6px; animation: pulse 1.5s ease-in-out infinite; }
     @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(.85)} }
     .orbit { position: absolute; inset: 0; animation: spin 1.2s linear infinite; }
-    .orbit-dot {
-      position: absolute; top: 3%; left: 50%; transform: translateX(-50%);
-      width: clamp(4px, 1vmin, 8px); height: clamp(4px, 1vmin, 8px);
-      background: #fff; border-radius: 50%;
-      box-shadow: 0 0 8px #5555ff, 0 0 20px #5555ff88;
-    }
+    .orbit-dot { position: absolute; top: 3%; left: 50%; transform: translateX(-50%); width: clamp(4px, 1vmin, 8px); height: clamp(4px, 1vmin, 8px); background: #fff; border-radius: 50%; box-shadow: 0 0 8px #5555ff, 0 0 20px #5555ff88; }
     .load-bar-wrap { width: clamp(80px, 30vw, 200px); height: 2px; background: #1a1a2a; border-radius: 2px; overflow: hidden; }
-    .load-bar {
-      height: 100%; background: linear-gradient(90deg, #5555ff, #aaaaff);
-      border-radius: 2px; animation: lbar 1.8s ease-in-out infinite;
-    }
-    @keyframes lbar {
-      0%  { width:0%;  margin-left:0;    }
-      50% { width:70%; margin-left:15%;  }
-      100%{ width:0%;  margin-left:100%; }
-    }
-    .load-text {
-      font-size: clamp(8px, 1.5vw, 11px); letter-spacing: clamp(1px, 0.5vw, 3px); color: #333;
-      text-transform: uppercase; animation: blink 1.5s ease-in-out infinite;
-    }
+    .load-bar { height: 100%; background: linear-gradient(90deg, #5555ff, #aaaaff); border-radius: 2px; animation: lbar 1.8s ease-in-out infinite; }
+    @keyframes lbar { 0% { width:0%; margin-left:0; } 50% { width:70%; margin-left:15%; } 100% { width:0%; margin-left:100%; } }
+    .load-text { font-size: clamp(8px, 1.5vw, 11px); letter-spacing: clamp(1px, 0.5vw, 3px); color: #333; text-transform: uppercase; animation: blink 1.5s ease-in-out infinite; }
     @keyframes blink { 0%,100%{opacity:.4} 50%{opacity:1} }
 
-    /* ── VIDEO WRAP ── */
-    #wrap {
-      position: relative; width: 100vw; height: 100vh;
-      background: #000; cursor: none;
-    }
+    /* PLAYER */
+    #wrap { position: relative; width: 100vw; height: 100vh; background: #000; cursor: none; }
     #wrap.ctrl-visible { cursor: default; }
-    video {
-      width: 100%; height: 100%;
-      object-fit: contain; background: #000; display: block;
-    }
+    video { width: 100%; height: 100%; object-fit: contain; background: #000; display: block; }
 
-    /* ── CONTROLS ── */
+    /* CONTROLS */
     #controls {
       position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 0 0 0 0;
       background: linear-gradient(transparent, rgba(0,0,0,0.9));
-      opacity: 0; transition: opacity 0.3s;
-      pointer-events: none;
+      opacity: 0; transition: opacity 0.3s; pointer-events: none;
     }
-    #wrap.ctrl-visible #controls {
-      opacity: 1; pointer-events: all;
-    }
+    #wrap.ctrl-visible #controls { opacity: 1; pointer-events: all; }
 
-    /* Progress */
     #progress-area {
-      padding: 0 14px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      position: relative;
-      height: 18px;
-      display: flex;
-      align-items: center;
+      padding: 0 14px; margin-bottom: 8px; cursor: pointer;
+      height: 18px; display: flex; align-items: center;
     }
-    #progress-bg {
-      width: 100%; height: 4px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 4px; position: relative;
-      transition: height 0.15s;
-    }
+    #progress-bg { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 4px; position: relative; transition: height 0.15s; }
     #progress-area:hover #progress-bg { height: 6px; }
-    #progress-fill {
-      height: 100%; background: #5555ff;
-      border-radius: 4px; width: 0%;
-      pointer-events: none;
-    }
-    #progress-thumb {
-      position: absolute; top: 50%; right: auto;
-      width: 12px; height: 12px;
-      background: #fff; border-radius: 50%;
-      transform: translate(-50%, -50%);
-      left: 0%;
-      opacity: 0; transition: opacity 0.15s;
-      pointer-events: none;
-    }
+    #progress-fill { height: 100%; background: #5555ff; border-radius: 4px; width: 0%; pointer-events: none; }
+    #progress-thumb { position: absolute; top: 50%; width: 12px; height: 12px; background: #fff; border-radius: 50%; transform: translate(-50%, -50%); left: 0%; opacity: 0; transition: opacity 0.15s; pointer-events: none; }
     #progress-area:hover #progress-thumb { opacity: 1; }
 
-    /* Bottom bar */
     #bottom-bar {
       display: flex; align-items: center;
       gap: clamp(2px, 1vw, 6px);
       padding: 0 clamp(6px, 2vw, 10px) clamp(6px, 1.5vw, 10px);
     }
-
-    .btn {
-      background: none; border: none; color: #fff;
-      cursor: pointer; padding: clamp(4px, 1vw, 6px) clamp(4px, 1vw, 8px);
-      border-radius: 5px; font-size: clamp(13px, 2.5vw, 17px);
-      line-height: 1; flex-shrink: 0;
-      transition: background 0.15s;
-      display: flex; align-items: center; justify-content: center;
-    }
+    .btn { background: none; border: none; color: #fff; cursor: pointer; padding: clamp(4px,1vw,6px) clamp(4px,1vw,8px); border-radius: 5px; font-size: clamp(13px,2.5vw,17px); line-height: 1; flex-shrink: 0; transition: background 0.15s; display: flex; align-items: center; justify-content: center; }
     .btn:hover { background: rgba(255,255,255,0.15); }
-    .btn svg { width: clamp(14px, 2.5vw, 18px); height: clamp(14px, 2.5vw, 18px); fill: #fff; }
+    .btn svg { width: clamp(14px,2.5vw,18px); height: clamp(14px,2.5vw,18px); fill: #fff; }
 
-    /* Volume */
-    #vol-wrap {
-      display: flex; align-items: center; gap: 4px;
-    }
-    #vol-slider {
-      width: 0; overflow: hidden;
-      transition: width 0.2s ease;
-      accent-color: #5555ff;
-      cursor: pointer; height: 3px;
-      opacity: 0;
-    }
-    #vol-wrap:hover #vol-slider,
-    #vol-wrap:focus-within #vol-slider {
-      width: clamp(40px, 8vw, 70px); opacity: 1;
-    }
+    #vol-wrap { display: flex; align-items: center; gap: 4px; }
+    #vol-slider { width: 0; overflow: hidden; transition: width 0.2s ease; accent-color: #5555ff; cursor: pointer; height: 3px; opacity: 0; }
+    #vol-wrap:hover #vol-slider, #vol-wrap:focus-within #vol-slider { width: clamp(40px,8vw,70px); opacity: 1; }
 
-    /* Time */
-    #time-txt {
-      font-size: clamp(9px, 1.5vw, 12px); color: #ccc;
-      white-space: nowrap; flex-shrink: 0;
-      margin-left: 4px;
-    }
-
-    /* Live badge */
-    #live-badge {
-      font-size: clamp(8px, 1.2vw, 10px); font-weight: 700;
-      letter-spacing: 1px; color: #fff;
-      background: #e00; padding: 2px 7px;
-      border-radius: 3px; flex-shrink: 0;
-      display: none;
-    }
+    #time-txt { font-size: clamp(9px,1.5vw,12px); color: #ccc; white-space: nowrap; flex-shrink: 0; margin-left: 4px; }
+    #live-badge { font-size: clamp(8px,1.2vw,10px); font-weight: 700; letter-spacing: 1px; color: #fff; background: #e00; padding: 2px 7px; border-radius: 3px; flex-shrink: 0; display: none; }
     #live-badge.show { display: block; }
+    .spacer { flex: 1; }
 
-    /* Quality selector */
     #quality-wrap { position: relative; }
-    #quality-btn { font-size: clamp(9px, 1.5vw, 12px); letter-spacing: 0.5px; padding: clamp(3px, 0.8vw, 5px) clamp(4px, 1vw, 8px); }
-    #quality-menu {
-      display: none;
-      position: absolute;
-      bottom: 38px; right: 0;
-      background: rgba(10,10,20,0.95);
-      border: 1px solid #333;
-      border-radius: 6px;
-      overflow: hidden;
-      min-width: clamp(80px, 15vw, 110px);
-      z-index: 10;
-    }
+    #quality-btn { font-size: clamp(9px,1.5vw,12px); letter-spacing: 0.5px; padding: clamp(3px,0.8vw,5px) clamp(4px,1vw,8px); }
+    #quality-menu { display: none; position: absolute; bottom: 38px; right: 0; background: rgba(10,10,20,0.95); border: 1px solid #333; border-radius: 6px; overflow: hidden; min-width: clamp(80px,15vw,110px); z-index: 10; }
     #quality-menu.open { display: block; }
-    .q-item {
-      padding: clamp(5px, 1.2vw, 8px) clamp(8px, 2vw, 14px);
-      font-size: clamp(10px, 1.5vw, 12px); color: #ccc;
-      cursor: pointer; white-space: nowrap;
-    }
+    .q-item { padding: clamp(5px,1.2vw,8px) clamp(8px,2vw,14px); font-size: clamp(10px,1.5vw,12px); color: #ccc; cursor: pointer; white-space: nowrap; }
     .q-item:hover { background: rgba(85,85,255,0.3); color: #fff; }
     .q-item.active { color: #5555ff; font-weight: 600; }
 
-    /* Spacer */
-    .spacer { flex: 1; }
+    /* Click to play overlay */
+    #play-overlay {
+      position: fixed; inset: 0; display: none;
+      align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.6); z-index: 50; cursor: pointer;
+    }
+    #play-overlay.show { display: flex; }
+    #play-overlay-btn { width: 80px; height: 80px; border-radius: 50%; background: rgba(85,85,255,0.9); display: flex; align-items: center; justify-content: center; }
 
-    /* Center play/pause tap */
-    #tap-overlay {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      pointer-events: none;
-    }
-    #tap-icon {
-      font-size: 64px; color: #fff;
-      opacity: 0; transform: scale(0.7);
-      transition: opacity 0.15s, transform 0.15s;
-      text-shadow: 0 0 30px rgba(0,0,0,0.8);
-      pointer-events: none;
-    }
+    /* Tap flash */
+    #tap-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+    #tap-icon { font-size: 64px; color: #fff; opacity: 0; transform: scale(0.7); transition: opacity 0.15s, transform 0.15s; text-shadow: 0 0 30px rgba(0,0,0,0.8); }
     #tap-icon.show { opacity: 1; transform: scale(1); }
 
     /* Not found */
-    #not-found {
-      display: none; position: fixed; inset: 0;
-      background: #000; flex-direction: column;
-      align-items: center; justify-content: center; gap: 10px;
-    }
+    #not-found { display: none; position: fixed; inset: 0; background: #000; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
     #not-found.visible { display: flex; }
     #not-found h2 { color: #888; font-size: 18px; font-weight: 500; }
-    #not-found p  { font-size: 13px; color: #444; }
-    #not-found code {
-      font-size: 13px; background: #111;
-      color: #5555ff; padding: 4px 10px; border-radius: 4px;
-    }
+    #not-found p { font-size: 13px; color: #444; }
+    #not-found code { font-size: 13px; background: #111; color: #5555ff; padding: 4px 10px; border-radius: 4px; }
 
-    /* Mobile */
     @media (max-width: 768px) {
       #wrap.ctrl-visible { cursor: default; }
-      #vol-wrap:hover #vol-slider { width: 55px; }
-      .btn { font-size: 19px; padding: 7px 9px; }
     }
   </style>
 </head>
@@ -285,76 +139,53 @@
   <div class="load-text">Loading Stream</div>
 </div>
 
+<!-- CLICK TO PLAY OVERLAY -->
+<div id="play-overlay" onclick="userPlay()">
+  <div id="play-overlay-btn">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+  </div>
+</div>
+
 <!-- PLAYER -->
 <div id="wrap">
-  <video id="v" autoplay muted playsinline></video>
-
+  <video id="v" playsinline></video>
   <div id="tap-overlay"><div id="tap-icon"></div></div>
-
   <div id="controls">
-    <!-- Progress bar -->
     <div id="progress-area" onmousedown="seekStart(event)" ontouchstart="seekStart(event)">
       <div id="progress-bg">
         <div id="progress-fill"></div>
         <div id="progress-thumb"></div>
       </div>
     </div>
-
-    <!-- Bottom bar -->
     <div id="bottom-bar">
-
-      <!-- Play/Pause -->
       <button class="btn" id="pp-btn" onclick="togglePlay()" title="Play/Pause">
-        <svg id="pp-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        <svg id="pp-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
       </button>
-
-      <!-- Skip back 10s -->
       <button class="btn" onclick="skip(-10)" title="Rewind 10s">
         <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/><text x="8.5" y="15.5" font-size="5" fill="#fff">10</text></svg>
       </button>
-
-      <!-- Skip forward 10s -->
       <button class="btn" onclick="skip(10)" title="Forward 10s">
         <svg viewBox="0 0 24 24"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/><text x="8.5" y="15.5" font-size="5" fill="#fff">10</text></svg>
       </button>
-
-      <!-- Volume -->
       <div id="vol-wrap">
         <button class="btn" id="mute-btn" onclick="toggleMute()" title="Mute">
           <svg id="vol-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
         </button>
         <input type="range" id="vol-slider" min="0" max="1" step="0.05" value="1" oninput="setVol(this.value)">
       </div>
-
-      <!-- Time -->
       <span id="time-txt">--:-- / --:--</span>
-
-      <!-- Live badge -->
       <span id="live-badge">● LIVE</span>
-
       <div class="spacer"></div>
-
-      <!-- Quality -->
       <div id="quality-wrap">
         <button class="btn" id="quality-btn" onclick="toggleQualityMenu()" title="Quality">AUTO</button>
         <div id="quality-menu"></div>
       </div>
-
-      <!-- PiP -->
-      <button class="btn" onclick="togglePiP()" title="Picture in Picture" id="pip-btn" style="display:none">
+      <button class="btn" onclick="togglePiP()" id="pip-btn" style="display:none" title="Picture in Picture">
         <svg viewBox="0 0 24 24"><path d="M19 11h-8v6h8v-6zm4 8V4.98C23 3.88 22.1 3 21 3H3c-1.1 0-2 .88-2 1.98V19c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zm-2 .02H3V5h18v14.02z"/></svg>
       </button>
-
-      <!-- Screen Share -->
-      <button class="btn" onclick="toggleScreenShare()" title="Screen Share" id="ss-btn" style="display:none">
-        <svg id="ss-icon" viewBox="0 0 24 24"><path d="M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6zm8 9l-4-4 1.41-1.41L12 12.17l4.59-4.58L18 9l-6 6z"/></svg>
-      </button>
-
-      <!-- Fullscreen -->
-      <button class="btn" id="fs-btn" onclick="toggleFS()" title="Fullscreen">
+      <button class="btn" onclick="toggleFS()" id="fs-btn" title="Fullscreen">
         <svg id="fs-icon" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
       </button>
-
     </div>
   </div>
 </div>
@@ -372,8 +203,9 @@
   let hls = null;
   let loaderHidden = false;
   let ctrlTimer = null;
-  let isSeeking = false;
   let tapTimer = null;
+  let isSeeking = false;
+  let lastTap = 0;
 
   // ── LOADER ──
   function hideLoader() {
@@ -390,21 +222,35 @@
     document.getElementById('not-found').classList.add('visible');
   }
 
+  function showPlayOverlay() {
+    hideLoader();
+    document.getElementById('play-overlay').classList.add('show');
+  }
+
+  function userPlay() {
+    document.getElementById('play-overlay').classList.remove('show');
+    v.muted = false;
+    v.play().catch(() => {});
+  }
+
   // ── INIT ──
-  async function init() {
+  document.addEventListener('DOMContentLoaded', async () => {
     const params = new URLSearchParams(window.location.search);
     const url = params.get('url') || params.get('ch');
 
     if (!url) { showNotFound('?url=https://your-stream.m3u8'); return; }
 
     document.title = (params.get('name') || 'Live') + ' — SportsTrack';
-    setTimeout(hideLoader, 10000);
+
+    // Hard fallback — hide loader after 12s no matter what
+    setTimeout(hideLoader, 12000);
 
     if (v.canPlayType('application/vnd.apple.mpegurl')) {
-      // Safari / iOS native HLS
+      // Safari / iOS native
       v.src = url;
-      v.addEventListener('loadedmetadata', startPlay);
-      v.addEventListener('error', hideLoader);
+      v.addEventListener('canplay', startPlay, { once: true });
+      v.addEventListener('error', () => { hideLoader(); }, { once: true });
+
     } else if (Hls.isSupported()) {
       hls = new Hls({
         maxBufferLength: 6,
@@ -419,45 +265,84 @@
       });
       hls.loadSource(url);
       hls.attachMedia(v);
+
       hls.on(Hls.Events.MANIFEST_PARSED, (e, data) => {
         buildQualityMenu(data.levels);
         startPlay();
       });
-      hls.on(Hls.Events.ERROR, (e, data) => {
+
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        console.warn('HLS error:', data.type, data.details);
         if (data.fatal) {
-          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad();
-          else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
-          else hideLoader();
+          if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+            hls.startLoad();
+          } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+            hls.recoverMediaError();
+          } else {
+            hideLoader();
+          }
         }
       });
+
       hls.on(Hls.Events.LEVEL_SWITCHED, (e, data) => {
         updateActiveQuality(data.level);
       });
+
     } else {
-      showNotFound('Browser not supported');
+      showNotFound('Browser not supported for HLS');
     }
-  }
+  });
 
   async function startPlay() {
-    v.muted = true;
     try {
+      // Always start muted — guaranteed to work
+      v.muted = true;
       await v.play();
-      v.muted = false;
-    } catch(e) {
-      try { await v.play(); } catch(e2) { hideLoader(); }
+      // Unmute after first frame renders
+      v.addEventListener('timeupdate', function onFirstFrame() {
+        v.removeEventListener('timeupdate', onFirstFrame);
+        v.muted = false;
+        updateVolIcon();
+      }, { once: true });
+    } catch (e) {
+      console.warn('Autoplay blocked, showing overlay');
+      showPlayOverlay();
     }
   }
 
-  v.addEventListener('playing', hideLoader, { once: true });
+  v.addEventListener('playing', () => {
+    hideLoader();
+    setPPIcon(false);
+    document.getElementById('play-overlay').classList.remove('show');
+  });
+
+  v.addEventListener('pause', () => setPPIcon(true));
+
+  // ── CONTROLS VISIBILITY ──
+  function showControls() {
+    wrap.classList.add('ctrl-visible');
+    clearTimeout(ctrlTimer);
+    ctrlTimer = setTimeout(() => {
+      if (!v.paused) wrap.classList.remove('ctrl-visible');
+    }, 3000);
+  }
+  // Click on video = toggle play/pause
+  wrap.addEventListener('click', (e) => {
+    // Ignore clicks on controls
+    if (e.target.closest('#controls') || e.target.closest('#play-overlay')) return;
+    togglePlay();
+    showControls();
+  });
+
+  wrap.addEventListener('mousemove', showControls);
+  wrap.addEventListener('touchstart', showControls, { passive: true });
+  v.addEventListener('pause', () => wrap.classList.add('ctrl-visible'));
 
   // ── PROGRESS ──
-  v.addEventListener('timeupdate', updateProgress);
-
-  function updateProgress() {
+  v.addEventListener('timeupdate', () => {
     if (isSeeking) return;
     const isLive = !isFinite(v.duration) || v.duration === Infinity;
     document.getElementById('live-badge').classList.toggle('show', isLive);
-
     if (isLive) {
       document.getElementById('progress-fill').style.width = '100%';
       document.getElementById('progress-thumb').style.left = '100%';
@@ -469,16 +354,12 @@
     document.getElementById('progress-fill').style.width = pct + '%';
     document.getElementById('progress-thumb').style.left = pct + '%';
     document.getElementById('time-txt').textContent = fmt(v.currentTime) + ' / ' + fmt(v.duration);
-  }
+  });
 
   function fmt(s) {
     s = Math.floor(s);
-    const h = Math.floor(s / 3600);
-    const m = Math.floor((s % 3600) / 60);
-    const sec = s % 60;
-    return h > 0
-      ? `${h}:${pad(m)}:${pad(sec)}`
-      : `${m}:${pad(sec)}`;
+    const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    return h > 0 ? h + ':' + pad(m) + ':' + pad(sec) : m + ':' + pad(sec);
   }
   function pad(n) { return n < 10 ? '0' + n : n; }
 
@@ -490,15 +371,10 @@
     const moveEvt = e.type === 'touchstart' ? 'touchmove' : 'mousemove';
     const upEvt   = e.type === 'touchstart' ? 'touchend'  : 'mouseup';
     document.addEventListener(moveEvt, doSeek);
-    document.addEventListener(upEvt, () => {
-      isSeeking = false;
-      document.removeEventListener(moveEvt, doSeek);
-    }, { once: true });
+    document.addEventListener(upEvt, () => { isSeeking = false; document.removeEventListener(moveEvt, doSeek); }, { once: true });
   }
-
   function doSeek(e) {
-    const area = document.getElementById('progress-area');
-    const rect = area.getBoundingClientRect();
+    const rect = document.getElementById('progress-area').getBoundingClientRect();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
     v.currentTime = pct * v.duration;
@@ -508,19 +384,19 @@
 
   // ── PLAY/PAUSE ──
   function togglePlay() {
-    if (v.paused) { v.play(); flashIcon('▶'); }
-    else          { v.pause(); flashIcon('⏸'); }
+    if (v.paused) {
+      v.muted = false;
+      v.play().then(() => flashIcon('▶')).catch(() => {});
+    } else {
+      v.pause();
+      flashIcon('⏸');
+    }
   }
-
-  v.addEventListener('play',  () => setPPIcon(false));
-  v.addEventListener('pause', () => setPPIcon(true));
-
   function setPPIcon(paused) {
     document.getElementById('pp-icon').innerHTML = paused
       ? '<path d="M8 5v14l11-7z"/>'
       : '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
   }
-
   function flashIcon(icon) {
     const el = document.getElementById('tap-icon');
     el.textContent = icon;
@@ -542,7 +418,7 @@
     updateVolIcon();
   }
   function setVol(val) {
-    v.volume = val;
+    v.volume = parseFloat(val);
     v.muted = val == 0;
     updateVolIcon();
   }
@@ -570,168 +446,82 @@
     auto.textContent = 'Auto';
     auto.onclick = () => { hls.currentLevel = -1; document.getElementById('quality-btn').textContent = 'AUTO'; closeQualityMenu(); };
     menu.appendChild(auto);
-
     levels.forEach((lvl, i) => {
       const item = document.createElement('div');
       item.className = 'q-item';
       item.dataset.level = i;
-      const label = lvl.height ? lvl.height + 'p' : Math.round(lvl.bitrate/1000) + 'k';
-      item.textContent = label;
-      item.onclick = () => {
-        hls.currentLevel = i;
-        document.getElementById('quality-btn').textContent = label;
-        closeQualityMenu();
-      };
+      item.textContent = lvl.height ? lvl.height + 'p' : Math.round(lvl.bitrate/1000) + 'k';
+      item.onclick = () => { hls.currentLevel = i; document.getElementById('quality-btn').textContent = item.textContent; closeQualityMenu(); };
       menu.appendChild(item);
     });
   }
-
   function updateActiveQuality(level) {
-    document.querySelectorAll('.q-item').forEach((el, i) => {
-      el.classList.toggle('active', i === level + 1);
-    });
+    document.querySelectorAll('.q-item').forEach((el, i) => { el.classList.toggle('active', i === level + 1); });
   }
-
-  function toggleQualityMenu() {
-    document.getElementById('quality-menu').classList.toggle('open');
-  }
-  function closeQualityMenu() {
-    document.getElementById('quality-menu').classList.remove('open');
-  }
+  function toggleQualityMenu() { document.getElementById('quality-menu').classList.toggle('open'); }
+  function closeQualityMenu() { document.getElementById('quality-menu').classList.remove('open'); }
 
   // ── PiP ──
-  if (document.pictureInPictureEnabled) {
-    document.getElementById('pip-btn').style.display = '';
-  }
+  if (document.pictureInPictureEnabled) document.getElementById('pip-btn').style.display = '';
   function togglePiP() {
     if (document.pictureInPictureElement) document.exitPictureInPicture();
     else v.requestPictureInPicture().catch(() => {});
   }
 
-  // ── SCREEN SHARE ──
-  let screenStream = null;
-  if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
-    document.getElementById('ss-btn').style.display = '';
-  }
-
-  async function toggleScreenShare() {
-    const btn = document.getElementById('ss-btn');
-    const icon = document.getElementById('ss-icon');
-
-    if (screenStream) {
-      // Stop screen share
-      screenStream.getTracks().forEach(t => t.stop());
-      screenStream = null;
-      btn.style.background = '';
-      icon.innerHTML = '<path d="M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6zm8 9l-4-4 1.41-1.41L12 12.17l4.59-4.58L18 9l-6 6z"/>';
-      return;
-    }
-
-    try {
-      screenStream = await navigator.mediaDevices.getDisplayMedia({
-        video: { cursor: 'always' },
-        audio: true
-      });
-
-      // Open a new window and stream screen capture into it
-      const win = window.open('', '_blank', 'width=900,height=520');
-      win.document.write(`
-        <!DOCTYPE html><html><head>
-        <title>SportsTrack - Screen Share</title>
-        <style>*{margin:0;padding:0;background:#000}video{width:100vw;height:100vh;object-fit:contain}</style>
-        </head><body>
-        <video id="sv" autoplay playsinline muted></video>
-        </body></html>
-      `);
-      win.document.close();
-
-      setTimeout(() => {
-        const sv = win.document.getElementById('sv');
-        if (sv) sv.srcObject = screenStream;
-      }, 300);
-
-      // Active indicator
-      btn.style.background = 'rgba(85,85,255,0.4)';
-      icon.innerHTML = '<path d="M21 6.5C21 5.12 19.88 4 18.5 4h-13C4.12 4 3 5.12 3 6.5v9C3 16.88 4.12 18 5.5 18H0v2h24v-2h-5.5C19.88 17 21 15.88 21 14.5v-8zm-2 8H5v-8h14v8zM10 10.62L15 8v8l-5-5.38z"/>';
-
-      // Auto stop when user ends share
-      screenStream.getVideoTracks()[0].addEventListener('ended', () => {
-        screenStream = null;
-        btn.style.background = '';
-        icon.innerHTML = '<path d="M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6zm8 9l-4-4 1.41-1.41L12 12.17l4.59-4.58L18 9l-6 6z"/>';
-      });
-
-    } catch(e) {
-      console.log('Screen share cancelled or not supported');
-    }
-  }
-
   // ── FULLSCREEN ──
+  function lockLandscape() {
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('landscape').catch(() => {
+        if (screen.lockOrientation) screen.lockOrientation('landscape');
+      });
+    } else if (screen.lockOrientation) {
+      screen.lockOrientation('landscape');
+    }
+  }
+  function unlockOrientation() {
+    if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+    else if (screen.unlockOrientation) screen.unlockOrientation();
+  }
   function toggleFS() {
     if (!document.fullscreenElement) {
-      wrap.requestFullscreen().catch(() => {});
-      // Lock to landscape on mobile when entering fullscreen
-      if (screen.orientation && screen.orientation.lock) {
-        screen.orientation.lock('landscape').catch(() => {});
-      }
+      const req = wrap.requestFullscreen || wrap.webkitRequestFullscreen || wrap.mozRequestFullScreen;
+      if (req) req.call(wrap).then(() => lockLandscape()).catch(() => lockLandscape());
     } else {
-      document.exitFullscreen();
-      // Unlock orientation when exiting fullscreen
-      if (screen.orientation && screen.orientation.unlock) {
-        screen.orientation.unlock();
-      }
+      unlockOrientation();
+      const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen;
+      if (exit) exit.call(document);
     }
   }
   document.addEventListener('fullscreenchange', () => {
-    const icon = document.getElementById('fs-icon');
-    icon.innerHTML = document.fullscreenElement
+    document.getElementById('fs-icon').innerHTML = document.fullscreenElement
       ? '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>'
       : '<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>';
-    // Unlock orientation if fullscreen was exited by browser (e.g. back button)
-    if (!document.fullscreenElement && screen.orientation && screen.orientation.unlock) {
-      screen.orientation.unlock();
-    }
+    if (!document.fullscreenElement) unlockOrientation();
   });
 
-  // ── CONTROLS VISIBILITY ──
-  function showControls() {
-    wrap.classList.add('ctrl-visible');
-    clearTimeout(ctrlTimer);
-    ctrlTimer = setTimeout(() => {
-      if (!v.paused) wrap.classList.remove('ctrl-visible');
-    }, 3000);
-  }
-  wrap.addEventListener('mousemove', showControls);
-  wrap.addEventListener('touchstart', showControls, { passive: true });
-  v.addEventListener('pause', () => wrap.classList.add('ctrl-visible'));
-  v.addEventListener('play',  () => showControls());
+  // ── KEYBOARD ──
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space')      { e.preventDefault(); togglePlay(); }
+    if (e.code === 'ArrowLeft')  skip(-10);
+    if (e.code === 'ArrowRight') skip(10);
+    if (e.code === 'ArrowUp')    { v.volume = Math.min(1, v.volume + 0.1); updateVolIcon(); }
+    if (e.code === 'ArrowDown')  { v.volume = Math.max(0, v.volume - 0.1); updateVolIcon(); }
+    if (e.code === 'KeyF') toggleFS();
+    if (e.code === 'KeyM') toggleMute();
+  });
 
-  // Double tap to seek on mobile
-  let lastTap = 0;
+  // ── MOBILE DOUBLE TAP ──
   wrap.addEventListener('touchend', (e) => {
     const now = Date.now();
     const rect = wrap.getBoundingClientRect();
-    const tapX = e.changedTouches[0].clientX;
     if (now - lastTap < 300) {
+      const tapX = e.changedTouches[0].clientX;
       if (tapX < rect.width / 2) skip(-10);
       else skip(10);
       e.preventDefault();
     }
     lastTap = now;
   });
-
-  // Space bar play/pause
-  document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
-    if (e.code === 'ArrowLeft')  skip(-10);
-    if (e.code === 'ArrowRight') skip(10);
-    if (e.code === 'ArrowUp')   { v.volume = Math.min(1, v.volume + 0.1); updateVolIcon(); }
-    if (e.code === 'ArrowDown') { v.volume = Math.max(0, v.volume - 0.1); updateVolIcon(); }
-    if (e.code === 'KeyF') toggleFS();
-    if (e.code === 'KeyM') toggleMute();
-  });
-
-  document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>

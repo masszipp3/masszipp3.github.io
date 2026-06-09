@@ -197,7 +197,313 @@
 </div>
 
 <script>
-const CHANNELS = [{"name": "ANTV", "group": "NASIONAL", "url": "https://d84q7nw4qf3j3.cloudfront.net/out/v1/0a6c6b1534444ab4bd903af8761e6747/index.mpd", "slug": "antv"}, {"name": "Soccer Channel V+", "group": "NASIONAL", "url": "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/63c0da12bb4d48afbaf053f51dff2353/index.mpd", "clearkey": "4035323a7fe64767ab8f3345ed9b93be:67377b8d429603f8bf30c161bda269e5", "slug": "soccer-channel-v"}, {"name": "Sportstars 1", "group": "NASIONAL", "url": "https://d2tjypxxy769fn.cloudfront.net/out/v1/89a6e4261cd7470f83e5869e90440cff/index.mpd", "clearkey": "39c4dc6704cf4ceea2fd4863b88d8a7d:4e9d7954c2ff46759289da4fc9f018ea", "slug": "sportstars-1"}, {"name": "Sportstars 2", "group": "NASIONAL", "url": "https://d3b0v7fggu5zwm.cloudfront.net/out/v1/d2c68a3dfb644808b416bd90dcc92d5f/index.mpd", "clearkey": "911e72adf36946afbdbb4f80782a8394:08aec548a851ba64b7172ae7f05cb91c", "slug": "sportstars-2"}, {"name": "Sportstars 4", "group": "NASIONAL", "url": "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/index.mpd", "clearkey": "b576e5f5f1bc4cbaa866e5b0face5a30:3377be6c3b5f688ebed687312c9b9d95", "slug": "sportstars-4"}, {"name": "HANACARAKA TV", "group": "NASIONAL", "url": "https://d1vckova5fh9mt.cloudfront.net/out/v1/17c724036c5f4615bd0b8093126b5c44/index.mpd", "slug": "hanacaraka-tv"}, {"name": "Elshinta", "group": "NASIONAL", "url": "https://cdn08jtedge.indihometv.com/dassdvr/134/mentaritv/manifest.mpd", "slug": "elshinta"}, {"name": "Al Jazeera", "group": "NASIONAL", "url": "https://cdn10jtedge.indihometv.com/atm/DASH/aljazeera/manifest.mpd", "slug": "al-jazeera"}, {"name": "ALJAZEERA ARAB", "group": "NASIONAL", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/AlJzrArab/mediampd/AlJzrArab.mpd", "slug": "aljazeera-arab"}, {"name": "TRANS TV", "group": "NASIONAL", "url": "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/7a69cfc9e135493f87ac4efd63000429/index.mpd", "slug": "trans-tv"}, {"name": "TRANS 7", "group": "NASIONAL", "url": "https://d2tjypxxy769fn.cloudfront.net/out/v1/0fd7b7d368bc44bc9b4dece20acc3e33/index.mpd", "slug": "trans-7"}, {"name": "RCTI", "group": "NASIONAL", "url": "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/997ce8767b604fae9fce05379b3b8b3a/index.mpd", "slug": "rcti"}, {"name": "SCTV", "group": "NASIONAL", "url": "https://d3b0v7fggu5zwm.cloudfront.net/out/v1/9e9aba7068ca4c7f8a73381bef5f8742/index.mpd", "slug": "sctv"}, {"name": "SINDONEWS", "group": "NASIONAL", "url": "https://cdnbal1.indihometv.com/atm/DASH/mncnews/mncnews-avc1_2500000=7-3277707030000000.mpd", "slug": "sindonews"}, {"name": "MNC TV V+", "group": "NASIONAL", "url": "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/d6b026ad50f14b7f9af5ddd5450007d4/index.mpd", "clearkey": "c3004565365a42d08e3bde39a516d64e:dbfdc0967cfbbed01dba730c99d9c14a", "slug": "mnc-tv-v"}, {"name": "iNews \ud83d\udd35", "group": "Nasional", "url": "https://fta2-cdn-flr.visionplus.id/out/v1/7b0404cd6a8a4a908123f10774854e46/index.mpd", "slug": "inews"}, {"name": "MDTV", "group": "NASIONAL", "url": "https://d3b0v7fggu5zwm.cloudfront.net/out/v1/3aefa03d32954b678e5faab6daa04b58/index.mpd", "slug": "mdtv"}, {"name": "GTV (V+)", "group": "NASIONAL", "url": "https://d2tjypxxy769fn.cloudfront.net/out/v1/b8b9b1d5f80f45649b4a3619291551ab/index.mpd", "slug": "gtv-v"}, {"name": "KOMPAS TV", "group": "NASIONAL", "url": "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/dafcaf8b26064ae7b27702088240b535/index.mpd", "slug": "kompas-tv"}, {"name": "METRO TV", "group": "NASIONAL", "url": "https://d2tjypxxy769fn.cloudfront.net/out/v1/fd4360b1c12c4375848c8f085fd51d41/index.mpd", "slug": "metro-tv"}, {"name": "BALI TV", "group": "NASIONAL", "url": "https://d2tjypxxy769fn.cloudfront.net/out/v1/44a2d1ab71a740babb233cf14832c59d/index.mpd", "slug": "bali-tv"}, {"name": "SIN PO TV", "group": "NASIONAL", "url": "https://cdn10jtedge.indihometv.com/atm/DASH/sinpotv/manifest.mpd", "slug": "sin-po-tv"}, {"name": "JTV", "group": "NASIONAL", "url": "https://atemeshield1-voe.sysln.id/live/eds/JTV/mediampd/JTV.mpd", "slug": "jtv"}, {"name": "JAWAPOST TV", "group": "NASIONAL", "url": "https://cdn10jtedge.indihometv.com/atm/DASH/jawapos/manifest.mpd", "slug": "jawapost-tv"}, {"name": "ZooMoo", "group": "", "url": "https://cempedak-live-cdn.mncnow.id/live/eds/Zoomoo/sa_dash_vmx/Zoomoo.mpd", "slug": "zoomoo"}, {"name": "Moonbug Kids", "group": "Kids", "url": "https://cdn01-telkomsel-01.akamaized.net/Content/DASH/Live/channel(c99739b1-0748-4a2a-b586-2501837adf20)/manifest.mpd", "slug": "moonbug-kids"}, {"name": "Biznet kids", "group": "Kids", "url": "http://livestream.biznetvideo.net/biznet_kids/smil:kids.smil/manifest.mpd", "slug": "biznet-kids"}, {"name": "HBO", "group": "MOVIES", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/3/4028c6856b6088c3016b87d64b970b53/manifest.mpd", "slug": "hbo"}, {"name": "HBO HITS", "group": "MOVIES", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/4/4028c6856c3db2cc016d054fbf67379f/manifest.mpd", "slug": "hbo-hits"}, {"name": "HBO SIGNATURE", "group": "MOVIES", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/3/4028c6856c3db2cc016d0552e0ca37a2/manifest.mpd", "slug": "hbo-signature"}, {"name": "HBO FAMILY", "group": "MOVIES", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/4/4028c6856c3db2cc016d055927fe37a4/manifest.mpd", "slug": "hbo-family"}, {"name": "CINEMAX", "group": "MOVIES", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/1/4028c6856c3db2cc016cdbfc4a1934bf/manifest.mpd", "slug": "cinemax"}, {"name": "Zee Cinema \u1d34\u1d30", "group": "MOVIES", "url": "https://d1g8wgjurz8via.cloudfront.net/bpk-tv/Zeecinemahd/default/manifest.mpd", "clearkey": "f56beaac9f124616872c741c9ce4fa4e:5d40a903238f4ad98abbed1877d4e3d1", "slug": "zee-cinema"}, {"name": "TVN Movies \ud83d\udd35", "group": "MOVIES", "url": "https://fta2-cdn-flr.visionplus.id/out/v1/096d5cf064294e7ea3a7f59ee2899669/index.mpd", "clearkey": "17fb563c784848f09d8a1ea88a2fa989:1d0bd94eab5d5f56a950b784d9345439", "slug": "tvn-movies"}, {"name": "IMC", "group": "MOVIES", "url": "https://fta3-cdn-flr.visionplus.id/out/v1/65432a4c12ca4a52abf473a0e41d7c7e/index.mpd", "slug": "imc"}, {"name": "Zee Bioskop", "group": "MOVIES", "url": "https://cdn10jtedge.indihometv.com/atm/DASH/zbioskop/manifest.mpd", "slug": "zee-bioskop"}, {"name": "Thrill", "group": "", "url": "https://cdn10jtedge.indihometv.com/atm/DASH/thrill/manifest.mpd", "slug": "thrill"}, {"name": "Warner TV", "group": "MOVIES", "url": "https://cdn10jtedge.indihometv.com/atm/DASH/warner/manifest.mpd", "slug": "warner-tv"}, {"name": "Galaxy", "group": "MOVIES", "url": "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/751a0982779f4edd904205eb351e220d/index.mpd", "clearkey": "cfbae59795044563b5b9b4927a79a76e:ce57c9490bd772b390d78b9fedaf8d36", "slug": "galaxy"}, {"name": "Galaxy Premium", "group": "MOVIES", "url": "https://d84q7nw4qf3j3.cloudfront.net/out/v1/45c0752c6b6b4397b80243ac9fed96fd/index.mpd", "clearkey": "0d9539db24004da9ac36ea49a09e255c:30304533b5008ad7f33c25f225506bc0", "slug": "galaxy-premium"}, {"name": "Rock Action", "group": "MOVIES", "url": "https://fta1-cdn-flr.visionplus.id/out/v1/010bb28c19b64975b318d3b00f58b18b/index.mpd", "clearkey": "d4126f7fd6134adfbedb3a0daefd7657:920f1adcca60069c887da7f1d225607d", "slug": "rock-action"}, {"name": "Rock Entertainment", "group": "MOVIES", "url": "https://cdn10jtedge.indihometv.com/atm/DASH/rock_entertainment/manifest.mpd", "slug": "rock-entertainment"}, {"name": "KIX", "group": "MOVIES", "url": "https://cdn10jtedge.indihometv.com/atm/DASH/kix/manifest.mpd", "slug": "kix"}, {"name": "Zee Bollywood", "group": "MOVIES", "url": "https://d1g8wgjurz8via.cloudfront.net/bpk-tv/Zeebollywood/default/manifest.mpd", "clearkey": "e61523260c614746b25b9a5523fe9a39:72ddbf37f76f49acbb8e140e7279e7a1", "slug": "zee-bollywood"}, {"name": "Zee Anmol Cinema", "group": "MOVIES", "url": "https://d1g8wgjurz8via.cloudfront.net/bpk-tv/Zeeanmolcinema/default/manifest.mpd", "clearkey": "812411cba8bc42c79eb2b19cd78ad3f3:468a0b8d3d5d42d8a5c41bb875390a74", "slug": "zee-anmol-cinema"}, {"name": "And Pictures", "group": "MOVIES", "url": "https://d1g8wgjurz8via.cloudfront.net/bpk-tv/Andpictures/default/manifest.mpd", "clearkey": "8dea532cabfe4f71ba20f62310e7949f:7a214a974e4f4d1d9bb66364d5f0cb92", "slug": "and-pictures"}, {"name": "Studio Universal \ud83d\udd35", "group": "MOVIES", "url": "https://d84q7nw4qf3j3.cloudfront.net/out/v1/dc63bd198bc44193b570e0567ff5b22c/index.mpd", "slug": "studio-universal"}, {"name": "Kplus Drama Korea", "group": "\ud83d\udcfa | MOVIES", "url": "https://cdn10jtedge.indihometv.com/atm/DASH/kplus/manifest.mpd", "slug": "kplus-drama-korea"}, {"name": "ORIGINALS", "group": "MOVIES", "url": "https://d3b0v7fggu5zwm.cloudfront.net/out/v1/e992e986a88346c18a5dcc4fbcdae6b9/index.mpd", "slug": "originals"}, {"name": "BUDDY STAR", "group": "MOVIES", "url": "https://d84q7nw4qf3j3.cloudfront.net/out/v1/c70975aaa68d47f2a38799e6730a7816/index.mpd", "slug": "buddy-star"}, {"name": "UNIQUES", "group": "MOVIES", "url": "https://d3b0v7fggu5zwm.cloudfront.net/out/v1/bde0a6d8d3fd4d77ae5093ad2e6699dc/index.mpd", "slug": "uniques"}, {"name": "FLIK", "group": "MOVIES", "url": "https://cdn08jtedge.indihometv.com/dassdvr/133/flik/manifest.mpd", "slug": "flik"}, {"name": "GLOBAL TREKKER", "group": "LIFESTYLE", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/GlobalTrekkerHD/mediampd/GlobalTrekkerHD.mpd", "slug": "global-trekker"}, {"name": "FOOD TRAVEL", "group": "LIFESTYLE", "url": "https://d84q7nw4qf3j3.cloudfront.net/out/v1/77d7eac1b90247ac9aa745bd2eb47fa8/index.mpd", "slug": "food-travel"}, {"name": "AFN", "group": "LIFESTYLE", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/AFNHD/mediampd/AFNHD.mpd", "slug": "afn"}, {"name": "HGTV", "group": "LIFESTYLE", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/HGTVHD/mediampd/HGTVHD.mpd", "slug": "hgtv"}, {"name": "FOOD NETWORK", "group": "LIFESTYLE", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/FoodNetworkHD/mediampd/FoodNetworkHD.mpd", "slug": "food-network"}, {"name": "TLC", "group": "LIFESTYLE", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/TLCHD/mediampd/TLCHD.mpd", "slug": "tlc"}, {"name": "BBC LIFESTYLE", "group": "LIFESTYLE", "url": "https://ast.livecricketsl.live/proxy/sg.php/https://linearjitp-playback.astro.com.my/dash-wv/linear/5050/default_ott.mpd", "slug": "bbc-lifestyle"}, {"name": "FASHION TV", "group": "LIFESTYLE", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/FashionTV/mediampd/FashionTV.mpd", "slug": "fashion-tv"}, {"name": "EAT N GO", "group": "LIFESTYLE", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/4/4028c6856fd0d66d0170342015d30907/manifest.mpd", "slug": "eat-n-go"}, {"name": "TRAVEL TV", "group": "LIFESTYLE", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/3/4028c6857fe540a1018060aab83c40b9/manifest.mpd", "slug": "travel-tv"}, {"name": "FIRST LIFESTYLE", "group": "LIFESTYLE", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/FirstLifestyleHD/mediampd/FirstLifestyleHD.mpd", "slug": "first-lifestyle"}, {"name": "AXN", "group": "ENTERTAINMENT", "url": "https://d3b0v7fggu5zwm.cloudfront.net/out/v1/456143d3b12140e1a872b25f067ddb62/index.mpd", "slug": "axn"}, {"name": "HITS NOW", "group": "ENTERTAINMENT", "url": "https://atemeshield1-voe.sysln.id/live/eds/HITSNowHD/mediampd/HITSNowHD.mpd", "slug": "hits-now"}, {"name": "HITS", "group": "ENTERTAINMENT", "url": "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/333a9658ed6a4424a92e319114fb7111/index.mpd", "slug": "hits"}, {"name": "LIFETIME", "group": "ENTERTAINMENT", "url": "https://atemeshield1-voe.sysln.id/live/eds/LifetimeHD/mediampd/LifetimeHD.mpd", "slug": "lifetime"}, {"name": "TVN", "group": "ENTERTAINMENT", "url": "https://d84q7nw4qf3j3.cloudfront.net/out/v1/6dc5412d26ea4e65961c825d866f2a34/index.mpd", "slug": "tvn"}, {"name": "ONE", "group": "ENTERTAINMENT", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/ONEHD/mediampd/ONEHD.mpd", "slug": "one"}, {"name": "K-PLUS", "group": "ENTERTAINMENT", "url": "https://cdn10jtedge.indihometv.com/atm/DASH/kplus/manifest.mpd", "slug": "k-plus"}, {"name": "ANIMAX", "group": "ENTERTAINMENT", "url": "https://atemeshield1-voe.sysln.id/live/eds/AnimaxHD/mediampd/AnimaxHD.mpd", "slug": "animax"}, {"name": "ANIPLUS", "group": "ENTERTAINMENT", "url": "https://cdn08jtedge.indihometv.com/dassdvr/134/aniplus/manifest.mpd", "slug": "aniplus"}, {"name": "CITRA DRAMA", "group": "ENTERTAINMENT", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/CitraDramaHD/mediampd/CitraDramaHD.mpd", "slug": "citra-drama"}, {"name": "CITRA ENTERTAINMENT", "group": "ENTERTAINMENT", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/CitraEntertainmentHD/mediampd/CitraEntertainmentHD.mpd", "slug": "citra-entertainment"}, {"name": "ENT", "group": "ENTERTAINMENT", "url": "https://d2tjypxxy769fn.cloudfront.net/out/v1/a90cb773466446b08595007bab12b920/index.mpd", "slug": "ent"}, {"name": "VISION PRIME", "group": "ENTERTAINMENT", "url": "https://d43tg978oium5.cloudfront.net/out/v1/873c24d3946048f68e459250f1d2fd98/index.mpd", "slug": "vision-prime"}, {"name": "CELEBRITIES TV", "group": "ENTERTAINMENT", "url": "https://fta3-cdn-flr.visionplus.id/out/v1/8cf72e61626f4361a45c57ce6f2fdad8/index.mpd", "slug": "celebrities-tv"}, {"name": "MAXSTREAM", "group": "ENTERTAINMENT", "url": "https://cdn08jtedge.indihometv.com/dassdvr/194/maxstream/manifest.mpd", "slug": "maxstream"}, {"name": "ALL PLAY ENT", "group": "ENTERTAINMENT", "url": "https://cdn10jtedge.indihometv.com/atm/DASH/useeprime/manifest.mpd", "slug": "all-play-ent"}, {"name": "DUNIA LAIN (IND)", "group": "ENTERTAINMENT", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/2/4028c6856ea34e35016ef8e9fdf951c1/manifest.mpd", "slug": "dunia-lain-ind"}, {"name": "CHANNEL SERU!", "group": "ENTERTAINMENT", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/5/4028c68572841ba301729c921bc43c00/manifest.mpd", "slug": "channel-seru"}, {"name": "!NSERT", "group": "ENTERTAINMENT", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/3/4028c6856c3db2cc016cdc51294b4f8e/manifest.mpd", "slug": "nsert"}, {"name": "ATV", "group": "ENTERTAINMENT", "url": "https://cdn10jtedge.indihometv.com/atm/DASH/atv/manifest.mpd", "slug": "atv"}, {"name": "MOVIES NEWS", "group": "ENTERTAINMENT", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/5/4028c68572841ba301729cc464d33c0b/manifest.mpd", "slug": "movies-news"}, {"name": "National Geographic WILD", "group": "KNOWLEDGE & DOCUMENTARY", "url": "https://cdn08jtedge.indihometv.com/dassdvr/194/curiosity/manifest.mpd", "slug": "national-geographic-wild"}, {"name": "Lingua Channel", "group": "KNOWLEDGE & DOCUMENTARY", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/4/4028c6856fd0d66d0170341b51bd0904/manifest.mpd", "slug": "lingua-channel"}, {"name": "Lingua Channel TRV", "group": "KNOWLEDGE & DOCUMENTARY", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/4/4028c6856fd0d66d0170341b51bd0904/manifest.mpd", "slug": "lingua-channel-trv"}, {"name": "BBC EARTH", "group": "KNOWLEDGE & DOCUMENTARY", "url": "https://d84q7nw4qf3j3.cloudfront.net/out/v1/4e5b2a283adf462c8b6b55b2ef059fac/index.mpd", "slug": "bbc-earth"}, {"name": "TECHSTORM", "group": "KNOWLEDGE & DOCUMENTARY", "url": "https://qp-pldt-live-grp-11-prod.akamaized.net/out/u/dr_tech_storm.mpd", "clearkey": "5675d85ce6754ba6aa8f6acc4660f76f:140bfb365cf143c349f68699238a610c", "slug": "techstorm"}, {"name": "NAT GEO", "group": "KNOWLEDGE & DOCUMENTARY", "url": "https://dash2.antik.sk/stream/hisi_ngc/playlist_cbcs.mpd", "slug": "nat-geo"}, {"name": "NAT GEO WILD", "group": "KNOWLEDGE & DOCUMENTARY", "url": "https://dash2.antik.sk/stream/hisi_ngw/playlist_cbcs.mpd", "slug": "nat-geo-wild"}, {"name": "TRAVEL & TASTE", "group": "KNOWLEDGE & DOCUMENTARY", "url": "https://b27a6dd8a86c3e4ba93fbae22aaaac64.pmqrop.channel-assembly.mediatailor.ap-southeast-1.amazonaws.com/v1/channel/FAST_5/dash.mpd", "slug": "travel-taste"}, {"name": "CGTN DOC", "group": "KNOWLEDGE", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/CGTNDocumentaryHD/mediampd/CGTNDocumentaryHD.mpd", "slug": "cgtn-doc"}, {"name": "CRIME INVESTIGATION", "group": "KNOWLEDGE", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/CrimeInvestigationHD/mediampd/CrimeInvestigationHD.mpd", "slug": "crime-investigation"}, {"name": "DISCOVERY CHANNEL", "group": "KNOWLEDGE", "url": "https://cdn08jtedge.indihometv.com/dassdvr/133/disco/manifest.mpd", "clearkey": "4271dec5b6794650872dc915fe10fdeb:0e64ddadd1cbd079f98c597fc01c06bf", "slug": "discovery-channel"}, {"name": "DISCOVERY ASIA", "group": "KNOWLEDGE", "url": "https://atemeshield1-voe.sysln.id/live/eds/DiscoveryAsiaHD/mediampd/DiscoveryAsiaHD.mpd", "slug": "discovery-asia"}, {"name": "DMAX", "group": "KNOWLEDGE", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/DMAXHD/mediampd/DMAXHD.mpd", "slug": "dmax"}, {"name": "OUTDOOR CHANNEL", "group": "KNOWLEDGE", "url": "https://d2tjypxxy769fn.cloudfront.net/out/v1/c169ca1dcbe249c5bf233aabc3db4a4f/index.mpd", "slug": "outdoor-channel"}, {"name": "HISTORY", "group": "KNOWLEDGE", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/HistoryHD/mediampd/HistoryHD.mpd", "slug": "history"}, {"name": "ANIMAL PLANET", "group": "KNOWLEDGE", "url": "https://cdn08jtedge.indihometv.com/dassdvr/194/animalplanet/manifest.mpd", "slug": "animal-planet"}, {"name": "LOVE NATURE", "group": "KNOWLEDGE", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/LoveNatureHD/mediampd/LoveNatureHD.mpd", "slug": "love-nature"}, {"name": "CURIOSITY", "group": "KNOWLEDGE", "url": "https://cdn08jtedge.indihometv.com/dassdvr/194/curiosity/manifest.mpd", "slug": "curiosity"}, {"name": "CNN USA", "group": "WORLD NEWS", "url": "https://d1abp075u76pbq.cloudfront.net/live/eds/FoxNews/sa_dash_vmx/FoxNews.mpd", "slug": "cnn-usa"}, {"name": "BBC News UK", "group": "WORLD NEWS", "url": "https://vs-cmaf-push-ww-live.akamaized.net/x=4/i=urn:bbc:pips:service:bbc_news_channel_hd/iptv_hd_abr_v1.mpd", "slug": "bbc-news-uk"}, {"name": "CNN INT", "group": "NEWS", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/CNNIntHD/mediampd/CNNIntHD.mpd", "slug": "cnn-int"}, {"name": "BBC NEWS", "group": "NEWS", "url": "https://atemeshield1-voe.sysln.id/live/eds/BBCWorldNewsHD/mediampd/BBCWorldNewsHD.mpd", "slug": "bbc-news"}, {"name": "DW ENGLISH", "group": "NEWS", "url": "https://atemeshield1-voe.sysln.id/live/eds/DwEnglishHD/mediampd/DwEnglishHD.mpd", "slug": "dw-english"}, {"name": "FRANCE24", "group": "NEWS", "url": "https://atemeshield1-voe.sysln.id/live/eds/France24/mediampd/France24.mpd", "slug": "france24"}, {"name": "TRT WORLD", "group": "NEWS", "url": "https://atemeshield1-voe.sysln.id/live/eds/TRTWorldHD/mediampd/TRTWorldHD.mpd", "slug": "trt-world"}, {"name": "ALJAZEERA ENGLISH", "group": "NEWS", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/AlJazeeraIntHD/mediampd/AlJazeeraIntHD.mpd", "slug": "aljazeera-english"}, {"name": "RT ENGLISH", "group": "NEWS", "url": "https://atemeshield1-voe.sysln.id/live/eds/RussiaTodayHD/mediampd/RussiaTodayHD.mpd", "slug": "rt-english"}, {"name": "EURONEWS", "group": "NEWS", "url": "https://atemeshield1-voe.sysln.id/live/eds/EURONEWS/mediampd/EURONEWS.mpd", "slug": "euronews"}, {"name": "CNA", "group": "NEWS", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/CNAHD/mediampd/CNAHD.mpd", "slug": "cna"}, {"name": "CGTN", "group": "NEWS", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/CGTN/mediampd/CGTN.mpd", "slug": "cgtn"}, {"name": "CNBC ASIA", "group": "NEWS", "url": "https://d3b0v7fggu5zwm.cloudfront.net/out/v1/e8d3f81aae4b46fbacf545140b86f2c4/index.mpd", "slug": "cnbc-asia"}, {"name": "BLOOMBERG", "group": "NEWS", "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/BloombergHD/mediampd/BloombergHD.mpd", "slug": "bloomberg"}, {"name": "IDX", "group": "NEWS", "url": "https://atemeshield1-voe.sysln.id/live/eds/IDXChannelHD/mediampd/IDXChannelHD.mpd", "slug": "idx"}, {"name": "JAKARTA GLOBE CHANNEL", "group": "NEWS", "url": "https://atemeshield1-voe.sysln.id/live/eds/JakartaGlobeHD/mediampd/JakartaGlobeHD.mpd", "slug": "jakarta-globe-channel"}, {"name": "TV 1", "group": "Malaysia", "url": "https://d25tgymtnqzu8s.cloudfront.net/smil:tv1/manifest.mpd", "slug": "tv-1"}, {"name": "TV 2", "group": "Malaysia", "url": "https://d25tgymtnqzu8s.cloudfront.net/smil:tv2/manifest.mpd", "slug": "tv-2"}, {"name": "8TV Malaysia", "group": "Malaysia", "url": "https://unifi-live08.secureswiftcontent.com/UnifiHD/live08.mpd", "slug": "8tv-malaysia"}, {"name": "TV 9 Malaysia", "group": "Malaysia", "url": "https://unifi-live09.secureswiftcontent.com/UnifiHD/live09.mpd", "slug": "tv-9-malaysia"}, {"name": "Dunia Sinema HD", "group": "Malaysia", "url": "https://unifi-live07.secureswiftcontent.com/UnifiHD/live27.mpd", "slug": "dunia-sinema-hd"}, {"name": "TV Okey", "group": "Malaysia", "url": "https://d25tgymtnqzu8s.cloudfront.net/smil:okey/manifest.mpd", "slug": "tv-okey"}, {"name": "TV 6", "group": "Malaysia", "url": "https://d25tgymtnqzu8s.cloudfront.net/smil:tv6/manifest.mpd", "slug": "tv-6"}, {"name": "Berita RTM", "group": "Malaysia", "url": "https://d25tgymtnqzu8s.cloudfront.net/smil:berita/manifest.mpd", "slug": "berita-rtm"}, {"name": "SpoTV", "group": "Sports", "url": "https://qp-pldt-live-bpk-01-prod.akamaized.net/bpk-tv/cg_spotvhd/default/index.mpd", "clearkey": "ec7ee27d83764e4b845c48cca31c8eef:9c0e4191203fccb0fde34ee29999129e", "slug": "spotv"}, {"name": "SpoTV 2", "group": "Sports", "url": "https://d2tjypxxy769fn.cloudfront.net/out/v1/46d9cf39b9a84183b8d5022ac8f4bc41/index.mpd", "clearkey": "1539f043249e413d91906036f305831e:671e24fd8d234c7f38d85055815f902a", "slug": "spotv-2"}, {"name": "Balap", "group": "Sports", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/5/4028c6858262bb8001827d52a48a3d55/manifest.mpd", "slug": "balap"}, {"name": "Historical Sports", "group": "Sports", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/2/4028c68578b331d80178b5acf1fd0a55/manifest.mpd", "slug": "historical-sports"}, {"name": "Motor Racing", "group": "Sports", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/3/4028c6856b8d2390016b9c6a5be61ef3/manifest.mpd", "slug": "motor-racing"}, {"name": "Horizon Sports", "group": "Sports", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/1/4028c6856b6088c3016b87d55f480b52/manifest.mpd", "slug": "horizon-sports"}, {"name": "Fight TV", "group": "Sports", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/5/4028c6857fe540a1018060a0c34340b6/manifest.mpd", "slug": "fight-tv"}, {"name": "IDCyclist", "group": "Sports", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/5/4028c68572841ba301729ceb0dd33c1c/manifest.mpd", "slug": "idcyclist"}, {"name": "Xtrem Sports", "group": "Sports", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/4/4028c6857fe540a1018060a4379740b7/manifest.mpd", "slug": "xtrem-sports"}, {"name": "Sports TV", "group": "Sports", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/1/4028c6857fe540a1018060afdef540bc/manifest.mpd", "slug": "sports-tv"}, {"name": "Speed TV", "group": "Sports", "url": "https://cdnjkt913.transvision.co.id:1000/live/master/2/4028c6857fe540a1018060b2307340bd/manifest.mpd", "slug": "speed-tv"}, {"name": "RTM SP", "group": "Sports", "url": "https://d25tgymtnqzu8s.cloudfront.net/smil:sukan/manifest.mpd", "slug": "rtm-sp"}, {"name": "RAI SPORT", "group": "Sports", "url": "https://viamotionhsi.netplus.ch/live/eds/raisport1/browser-dash/raisport1.mpd", "slug": "rai-sport"}, {"name": "FUBO 2", "group": "Sports", "url": "https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/uiffe4jhf0/out/v1/3534efafca8c4815adbb4d2e9a1fe003/cenc.mpd", "slug": "fubo-2"}, {"name": "UNIFI", "group": "Sports", "url": "https://unifi-live02.secureswiftcontent.com/UnifiHD/live11.mpd", "slug": "unifi"}, {"name": "TAP Sports", "group": "\u2606OLAHRAGA\u2606", "url": "https://qp-pldt-live-grp-11-prod.akamaized.net/out/u/dr_tapsports.mpd", "clearkey": "eabd2d95c89e42f2b0b0b40ce4179ea0:0e7e35a07e2c12822316c0dc4873903f", "slug": "tap-sports"}, {"name": "Zero Sport", "group": "\u2606OLAHRAGA\u2606", "url": "https://cdn-seachange-prod-01.vos360.video/Content/DASH/Live/channel(b3278dd9-ffd3-cfcc-f35b-fdbfeb006100)/master.mpd", "clearkey": "d384ff1dad2b39899e81b386baa97e02:abf42b268d9ea7775870c77200c51bc6", "slug": "zero-sport"}, {"name": "RAI SPORTS", "group": "\u2606OLAHRAGA\u2606", "url": "https://viamotionhsi.netplus.ch/live/eds/raisport1/browser-dash/raisport1.mpd", "slug": "rai-sports"}, {"name": "NEW TV SP", "group": "\u2606OLAHRAGA\u2606", "url": "https://cdn08jtedge.indihometv.com/dassdvr/130/kungfutv/manifest.mpd", "clearkey": "69646b755f3130303030303030303030:e4a2359b05563399f1d9adfce641724a", "slug": "new-tv-sp"}, {"name": "ORF SPORT", "group": "\u2606OLAHRAGA\u2606", "url": "https://ac-003.live.p7s1video.net/c8f927b4/t_003/orf-sport-plus-at/cenc-default.mpd", "clearkey": "ba811cbf6c7afe35396453271437e013:b55a91719f41754015edb61f5cd2468c", "slug": "orf-sport"}, {"name": "JOJ SPORT", "group": "\u2606OLAHRAGA\u2606", "url": "https://dash2.antik.sk/stream/nvidia_joj_sport/playlist_cenc.mpd", "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d", "slug": "joj-sport"}, {"name": "RTVS SPORT SLOVAKIA", "group": "\u2606OLAHRAGA\u2606", "url": "https://dash2.antik.sk/stream/nvidia_rtvs_sport/playlist_cenc.mpd", "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d", "slug": "rtvs-sport-slovakia"}, {"name": "CT SPORT", "group": "\u2606OLAHRAGA\u2606", "url": "https://dash2.antik.sk/stream/nvidia_ct_sport/playlist_cenc.mpd", "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d", "slug": "ct-sport"}, {"name": "Eurosport 1 HD", "group": "\u2606OLAHRAGA\u2606", "url": "https://dash2.antik.sk/stream/nvidia_eurosport1/playlist_cenc.mpd", "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d", "slug": "eurosport-1-hd"}, {"name": "Eurosport 2 HD", "group": "\u2606OLAHRAGA\u2606", "url": "https://dash2.antik.sk/stream/nvidia_eurosport2/playlist_cenc.mpd", "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d", "slug": "eurosport-2-hd"}, {"name": "SPOTV PH", "group": "\u2606OLAHRAGA\u2606", "url": "https://qp-pldt-live-grp-11-prod.akamaized.net/out/u/dr_spotvhd.mpd", "clearkey": "ec7ee27d83764e4b845c48cca31c8eef:9c0e4191203fccb0fde34ee29999129e", "slug": "spotv-ph"}, {"name": "ARENA1 SK", "group": "\u2606OLAHRAGA\u2606", "url": "https://dash3.antik.sk/stream/hisi_arena_sport1/playlist_cbcs.mpd", "slug": "arena1-sk"}, {"name": "ARENA2 SK", "group": "\u2606OLAHRAGA\u2606", "url": "https://dash2.antik.sk/stream/hisi_as2/playlist_cbcs.mpd", "slug": "arena2-sk"}, {"name": "BLOZ DE", "group": "\u2606OLAHRAGA\u2606", "url": "https://viamotionhsi.netplus.ch/live/eds/bluezoomde/browser-dash/bluezoomde.mpd", "slug": "bloz-de"}, {"name": "BLOZ FR", "group": "\u2606OLAHRAGA\u2606", "url": "https://viamotionhsi.netplus.ch/live/eds/bluezoomfr/browser-dash/bluezoomfr.mpd", "slug": "bloz-fr"}, {"name": "HBO BOXING", "group": "\u2606OLAHRAGA\u2606", "url": "https://otte.live.fly.ww.aiv-cdn.net/dub-nitro/live/clients/dash/enc/9a6uh9e0rz/out/v1/4ca8071b437142ffb1bea21340b0ba05/cenc.mpd", "clearkey": "a4b2fe10c9d62d32220e8ea2dceda6f9:e6e1173c892f7fbd60a37a76a78935cb", "slug": "hbo-boxing"}, {"name": "FX SPORTS 1", "group": "\u2606SPORT+\u2606", "url": "https://otte.live.fly.ww.aiv-cdn.net/iad-nitro/live/clients/dash/enc/oboxe53wyo/out/v1/f7892a9d706d419a846d738fa22ea33e/cenc.mpd", "clearkey": "2fbdaa3bea0d0323ae011b318d1db716:8726ef7eaf5b9dce15fb6aa9f80bd53f", "slug": "fx-sports-1"}, {"name": "FX SPORTS 2", "group": "\u2606SPORT+\u2606", "url": "https://otte.live.fly.ww.aiv-cdn.net/iad-nitro/live/clients/dash/enc/tepjqej1ys/out/v1/c9c9159baee749a19612b1598495859a/cenc.mpd", "clearkey": "8836fb04d62dc64c9f8a39ef8640d5eb:d4f05ce56c5231b7cdf53455bea58621", "slug": "fx-sports-2"}, {"name": "FX PREM", "group": "\u2606SPORT+\u2606", "url": "https://otte.live.fly.ww.aiv-cdn.net/iad-nitro/live/clients/dash/enc/fdx74zqzhu/out/v1/7d7a8c6981a842b98a683e9fbfe51d17/cenc.mpd", "clearkey": "9f327d24c66fbd84e15ab5c9ead7c7a4:83837185529c0c4048f81386c2d36426", "slug": "fx-prem"}, {"name": "SPORTV 1", "group": "", "url": "https://otte.live.fly.ww.aiv-cdn.net/gru-nitro/live/clients/dash-sd/enc/rkhugudynd/out/v1/f7763e695c3b469594ed89fa163ebf0c/cenc-sd.mpd", "clearkey": "eaea45512d137def15b209a089cafd14:8d42db746ed0c4df61729b0d68d42bd7", "slug": "sportv-1"}, {"name": "SPORTV 2", "group": "", "url": "https://otte.live.fly.ww.aiv-cdn.net/gru-nitro/live/clients/dash-sd/enc/4yiko4it8k/out/v1/b77dd424c745443aba2f3f88d418f797/cenc-sd.mpd", "clearkey": "9009b7189e3e68cc09d17811f2beb55a:dd3f96a94c909da48ff40c92aabf8cf3", "slug": "sportv-2"}, {"name": "SPORT 1 SLOVAKIA", "group": "\u2606SPORT+\u2606", "url": "https://dash2.antik.sk/stream/nvidia_sport_1/playlist_cenc.mpd", "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d", "slug": "sport-1-slovakia"}, {"name": "SPORT 2 SLOVAKIA", "group": "\u2606SPORT+\u2606", "url": "https://dash2.antik.sk/stream/nvidia_sport2/playlist_cenc.mpd", "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d", "slug": "sport-2-slovakia"}, {"name": "NSPORT1", "group": "\u2606SPORT+\u2606", "url": "https://dash2.antik.sk/stream/nvidia_nova_sport1/playlist_cenc.mpd", "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d", "slug": "nsport1"}, {"name": "NSPORT2", "group": "\u2606SPORT+\u2606", "url": "https://dash2.antik.sk/stream/nvidia_nova_sport2/playlist_cenc.mpd", "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d", "slug": "nsport2"}, {"name": "TSN 1", "group": "\u2606SPORT+\u2606", "url": "https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/u142pfptsm/out/v1/1caa3b2dfa9e448d8f61209bdfc1acdc/cenc.mpd", "clearkey": "7e99f734748d098cbfa2f7bde968dd44:98ea6088c3222e9abaf61e537804d6cc", "slug": "tsn-1"}, {"name": "TSN 2", "group": "\u2606SPORT+\u2606", "url": "https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/v5v9yfn62i/out/v1/0991e33d09da46b2857fcc845db95c40/cenc.mpd", "clearkey": "362202eefc5d9e42eec6450998cce9e8:978dfdd53186ec587d940e0bd1e2ec42", "slug": "tsn-2"}, {"name": "TSN 3", "group": "\u2606SPORT+\u2606", "url": "https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/mrskysvotx/out/v1/ad58961bd8fd48d2944e461c034b8914/cenc.mpd", "clearkey": "d9097a1b7d04b7786b29f2b0e155316d:279695ebe0fb1bc5787422b6b59ce8a8", "slug": "tsn-3"}, {"name": "Spanish TV", "group": "ENTERTAINMENT", "url": "https://otte.live.fly.ww.aiv-cdn.net/lhr-nitro/live/clients/dash/enc/62qdkefv9f/out/v1/f7d5b356e048494a8325563e8916d50b/cenc.mpd", "clearkey": "fd86dde0ae3e14ff51c8fc8f248a50db:d106ae78b0893da2e4393ece99420baa", "slug": "spanish-tv"}];
+const CHANNELS = [
+  {
+    "name": "SpoTV",
+    "group": "Sports",
+    "url": "https://qp-pldt-live-bpk-01-prod.akamaized.net/bpk-tv/cg_spotvhd/default/index.mpd",
+    "clearkey": "ec7ee27d83764e4b845c48cca31c8eef:9c0e4191203fccb0fde34ee29999129e",
+    "slug": "spotv"
+  },
+  {
+    "name": "SpoTV 2",
+    "group": "Sports",
+    "url": "https://d2tjypxxy769fn.cloudfront.net/out/v1/46d9cf39b9a84183b8d5022ac8f4bc41/index.mpd",
+    "clearkey": "1539f043249e413d91906036f305831e:671e24fd8d234c7f38d85055815f902a",
+    "slug": "spotv-2"
+  },
+  {
+    "name": "Sportstars 1",
+    "group": "Sports",
+    "url": "https://d2tjypxxy769fn.cloudfront.net/out/v1/89a6e4261cd7470f83e5869e90440cff/index.mpd",
+    "clearkey": "39c4dc6704cf4ceea2fd4863b88d8a7d:4e9d7954c2ff46759289da4fc9f018ea",
+    "slug": "sportstars-1"
+  },
+  {
+    "name": "Sportstars 2",
+    "group": "Sports",
+    "url": "https://d3b0v7fggu5zwm.cloudfront.net/out/v1/d2c68a3dfb644808b416bd90dcc92d5f/index.mpd",
+    "clearkey": "911e72adf36946afbdbb4f80782a8394:08aec548a851ba64b7172ae7f05cb91c",
+    "slug": "sportstars-2"
+  },
+  {
+    "name": "Sportstars 4",
+    "group": "Sports",
+    "url": "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2fcc58ccec8c45e9aa094fb980eb642d/index.mpd",
+    "clearkey": "b576e5f5f1bc4cbaa866e5b0face5a30:3377be6c3b5f688ebed687312c9b9d95",
+    "slug": "sportstars-4"
+  },
+  {
+    "name": "Balap",
+    "group": "Sports",
+    "url": "https://cdnjkt913.transvision.co.id:1000/live/master/5/4028c6858262bb8001827d52a48a3d55/manifest.mpd",
+    "slug": "balap"
+  },
+  {
+    "name": "Historical Sports",
+    "group": "Sports",
+    "url": "https://cdnjkt913.transvision.co.id:1000/live/master/2/4028c68578b331d80178b5acf1fd0a55/manifest.mpd",
+    "slug": "historical-sports"
+  },
+  {
+    "name": "Motor Racing",
+    "group": "Sports",
+    "url": "https://cdnjkt913.transvision.co.id:1000/live/master/3/4028c6856b8d2390016b9c6a5be61ef3/manifest.mpd",
+    "slug": "motor-racing"
+  },
+  {
+    "name": "Horizon Sports",
+    "group": "Sports",
+    "url": "https://cdnjkt913.transvision.co.id:1000/live/master/1/4028c6856b6088c3016b87d55f480b52/manifest.mpd",
+    "slug": "horizon-sports"
+  },
+  {
+    "name": "Fight TV",
+    "group": "Sports",
+    "url": "https://cdnjkt913.transvision.co.id:1000/live/master/5/4028c6857fe540a1018060a0c34340b6/manifest.mpd",
+    "slug": "fight-tv"
+  },
+  {
+    "name": "IDCyclist",
+    "group": "Sports",
+    "url": "https://cdnjkt913.transvision.co.id:1000/live/master/5/4028c68572841ba301729ceb0dd33c1c/manifest.mpd",
+    "slug": "idcyclist"
+  },
+  {
+    "name": "Xtrem Sports",
+    "group": "Sports",
+    "url": "https://cdnjkt913.transvision.co.id:1000/live/master/4/4028c6857fe540a1018060a4379740b7/manifest.mpd",
+    "slug": "xtrem-sports"
+  },
+  {
+    "name": "Sports TV",
+    "group": "Sports",
+    "url": "https://cdnjkt913.transvision.co.id:1000/live/master/1/4028c6857fe540a1018060afdef540bc/manifest.mpd",
+    "slug": "sports-tv"
+  },
+  {
+    "name": "Speed TV",
+    "group": "Sports",
+    "url": "https://cdnjkt913.transvision.co.id:1000/live/master/2/4028c6857fe540a1018060b2307340bd/manifest.mpd",
+    "slug": "speed-tv"
+  },
+  {
+    "name": "RTM SP",
+    "group": "Sports",
+    "url": "https://d25tgymtnqzu8s.cloudfront.net/smil:sukan/manifest.mpd",
+    "slug": "rtm-sp"
+  },
+  {
+    "name": "RAI SPORT",
+    "group": "Sports",
+    "url": "https://viamotionhsi.netplus.ch/live/eds/raisport1/browser-dash/raisport1.mpd",
+    "slug": "rai-sport"
+  },
+  {
+    "name": "FUBO 2",
+    "group": "Sports",
+    "url": "https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/uiffe4jhf0/out/v1/3534efafca8c4815adbb4d2e9a1fe003/cenc.mpd",
+    "slug": "fubo-2"
+  },
+  {
+    "name": "UNIFI",
+    "group": "Sports",
+    "url": "https://unifi-live02.secureswiftcontent.com/UnifiHD/live11.mpd",
+    "slug": "unifi"
+  },
+  {
+    "name": "TAP Sports",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://qp-pldt-live-grp-11-prod.akamaized.net/out/u/dr_tapsports.mpd",
+    "clearkey": "eabd2d95c89e42f2b0b0b40ce4179ea0:0e7e35a07e2c12822316c0dc4873903f",
+    "slug": "tap-sports"
+  },
+  {
+    "name": "Zero Sport",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://cdn-seachange-prod-01.vos360.video/Content/DASH/Live/channel(b3278dd9-ffd3-cfcc-f35b-fdbfeb006100)/master.mpd",
+    "clearkey": "d384ff1dad2b39899e81b386baa97e02:abf42b268d9ea7775870c77200c51bc6",
+    "slug": "zero-sport"
+  },
+  {
+    "name": "RAI SPORTS",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://viamotionhsi.netplus.ch/live/eds/raisport1/browser-dash/raisport1.mpd",
+    "clearkey": "87a5beac54c74bf4a95a142b90fb817f:4618d1d8d1903223990635f181afd202",
+    "slug": "rai-sports"
+  },
+  {
+    "name": "NEW TV SP",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://cdn08jtedge.indihometv.com/dassdvr/130/kungfutv/manifest.mpd",
+    "clearkey": "69646b755f3130303030303030303030:e4a2359b05563399f1d9adfce641724a",
+    "slug": "new-tv-sp"
+  },
+  {
+    "name": "ORF SPORT",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://ac-003.live.p7s1video.net/c8f927b4/t_003/orf-sport-plus-at/cenc-default.mpd",
+    "clearkey": "ba811cbf6c7afe35396453271437e013:b55a91719f41754015edb61f5cd2468c",
+    "slug": "orf-sport"
+  },
+  {
+    "name": "JOJ SPORT",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://dash2.antik.sk/stream/nvidia_joj_sport/playlist_cenc.mpd",
+    "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d",
+    "slug": "joj-sport"
+  },
+  {
+    "name": "RTVS SPORT SLOVAKIA",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://dash2.antik.sk/stream/nvidia_rtvs_sport/playlist_cenc.mpd",
+    "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d",
+    "slug": "rtvs-sport-slovakia"
+  },
+  {
+    "name": "CT SPORT",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://dash2.antik.sk/stream/nvidia_ct_sport/playlist_cenc.mpd",
+    "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d",
+    "slug": "ct-sport"
+  },
+  {
+    "name": "Eurosport 1 HD",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://dash2.antik.sk/stream/nvidia_eurosport1/playlist_cenc.mpd",
+    "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d",
+    "slug": "eurosport-1-hd"
+  },
+  {
+    "name": "Eurosport 2 HD",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://dash2.antik.sk/stream/nvidia_eurosport2/playlist_cenc.mpd",
+    "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d",
+    "slug": "eurosport-2-hd"
+  },
+  {
+    "name": "SPOTV PH",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://qp-pldt-live-grp-11-prod.akamaized.net/out/u/dr_spotvhd.mpd",
+    "clearkey": "ec7ee27d83764e4b845c48cca31c8eef:9c0e4191203fccb0fde34ee29999129e",
+    "slug": "spotv-ph"
+  },
+  {
+    "name": "ARENA1 SK",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://dash3.antik.sk/stream/hisi_arena_sport1/playlist_cbcs.mpd",
+    "slug": "arena1-sk"
+  },
+  {
+    "name": "ARENA2 SK",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://dash2.antik.sk/stream/hisi_as2/playlist_cbcs.mpd",
+    "slug": "arena2-sk"
+  },
+  {
+    "name": "BLOZ DE",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://viamotionhsi.netplus.ch/live/eds/bluezoomde/browser-dash/bluezoomde.mpd",
+    "slug": "bloz-de"
+  },
+  {
+    "name": "BLOZ FR",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://viamotionhsi.netplus.ch/live/eds/bluezoomfr/browser-dash/bluezoomfr.mpd",
+    "slug": "bloz-fr"
+  },
+  {
+    "name": "HBO BOXING",
+    "group": "☆OLAHRAGA☆",
+    "url": "https://otte.live.fly.ww.aiv-cdn.net/dub-nitro/live/clients/dash/enc/9a6uh9e0rz/out/v1/4ca8071b437142ffb1bea21340b0ba05/cenc.mpd",
+    "clearkey": "a4b2fe10c9d62d32220e8ea2dceda6f9:e6e1173c892f7fbd60a37a76a78935cb",
+    "slug": "hbo-boxing"
+  },
+  {
+    "name": "FX SPORTS 1",
+    "group": "☆SPORT+☆",
+    "url": "https://otte.live.fly.ww.aiv-cdn.net/iad-nitro/live/clients/dash/enc/oboxe53wyo/out/v1/f7892a9d706d419a846d738fa22ea33e/cenc.mpd",
+    "clearkey": "2fbdaa3bea0d0323ae011b318d1db716:8726ef7eaf5b9dce15fb6aa9f80bd53f",
+    "slug": "fx-sports-1"
+  },
+  {
+    "name": "FX SPORTS 2",
+    "group": "☆SPORT+☆",
+    "url": "https://otte.live.fly.ww.aiv-cdn.net/iad-nitro/live/clients/dash/enc/tepjqej1ys/out/v1/c9c9159baee749a19612b1598495859a/cenc.mpd",
+    "clearkey": "8836fb04d62dc64c9f8a39ef8640d5eb:d4f05ce56c5231b7cdf53455bea58621",
+    "slug": "fx-sports-2"
+  },
+  {
+    "name": "FX PREM",
+    "group": "☆SPORT+☆",
+    "url": "https://otte.live.fly.ww.aiv-cdn.net/iad-nitro/live/clients/dash/enc/fdx74zqzhu/out/v1/7d7a8c6981a842b98a683e9fbfe51d17/cenc.mpd",
+    "clearkey": "9f327d24c66fbd84e15ab5c9ead7c7a4:83837185529c0c4048f81386c2d36426",
+    "slug": "fx-prem"
+  },
+  {
+    "name": "SPORTV 1",
+    "group": "☆SPORT+☆",
+    "url": "https://otte.live.fly.ww.aiv-cdn.net/gru-nitro/live/clients/dash-sd/enc/rkhugudynd/out/v1/f7763e695c3b469594ed89fa163ebf0c/cenc-sd.mpd",
+    "clearkey": "eaea45512d137def15b209a089cafd14:8d42db746ed0c4df61729b0d68d42bd7",
+    "slug": "sportv-1"
+  },
+  {
+    "name": "SPORTV 2",
+    "group": "☆SPORT+☆",
+    "url": "https://otte.live.fly.ww.aiv-cdn.net/gru-nitro/live/clients/dash-sd/enc/4yiko4it8k/out/v1/b77dd424c745443aba2f3f88d418f797/cenc-sd.mpd",
+    "clearkey": "9009b7189e3e68cc09d17811f2beb55a:dd3f96a94c909da48ff40c92aabf8cf3",
+    "slug": "sportv-2"
+  },
+  {
+    "name": "SPORT 1 SLOVAKIA",
+    "group": "☆SPORT+☆",
+    "url": "https://dash2.antik.sk/stream/nvidia_sport_1/playlist_cenc.mpd",
+    "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d",
+    "slug": "sport-1-slovakia"
+  },
+  {
+    "name": "SPORT 2 SLOVAKIA",
+    "group": "☆SPORT+☆",
+    "url": "https://dash2.antik.sk/stream/nvidia_sport2/playlist_cenc.mpd",
+    "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d",
+    "slug": "sport-2-slovakia"
+  },
+  {
+    "name": "NSPORT1",
+    "group": "☆SPORT+☆",
+    "url": "https://dash2.antik.sk/stream/nvidia_nova_sport1/playlist_cenc.mpd",
+    "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d",
+    "slug": "nsport1"
+  },
+  {
+    "name": "NSPORT2",
+    "group": "☆SPORT+☆",
+    "url": "https://dash2.antik.sk/stream/nvidia_nova_sport2/playlist_cenc.mpd",
+    "clearkey": "11223344556677889900112233445566:4b80724d0ef86bcb2c21f7999d67739d",
+    "slug": "nsport2"
+  },
+  {
+    "name": "TSN 1",
+    "group": "☆SPORT+☆",
+    "url": "https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/u142pfptsm/out/v1/1caa3b2dfa9e448d8f61209bdfc1acdc/cenc.mpd",
+    "clearkey": "7e99f734748d098cbfa2f7bde968dd44:98ea6088c3222e9abaf61e537804d6cc",
+    "slug": "tsn-1"
+  },
+  {
+    "name": "TSN 2",
+    "group": "☆SPORT+☆",
+    "url": "https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/v5v9yfn62i/out/v1/0991e33d09da46b2857fcc845db95c40/cenc.mpd",
+    "clearkey": "362202eefc5d9e42eec6450998cce9e8:978dfdd53186ec587d940e0bd1e2ec42",
+    "slug": "tsn-2"
+  },
+  {
+    "name": "TSN 3",
+    "group": "☆SPORT+☆",
+    "url": "https://otte.live.fly.ww.aiv-cdn.net/pdx-nitro/live/clients/dash/enc/mrskysvotx/out/v1/ad58961bd8fd48d2944e461c034b8914/cenc.mpd",
+    "clearkey": "d9097a1b7d04b7786b29f2b0e155316d:279695ebe0fb1bc5787422b6b59ce8a8",
+    "slug": "tsn-3"
+  }
+]
 
 let loaderHidden = false;
 

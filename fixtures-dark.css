@@ -27,8 +27,9 @@
 .vs{font-size:24px;font-weight:900;color:#475569;}
 .kickoff{font-size:12px;font-weight:700;color:#94a3b8;margin-top:4px;}
 .match-footer{margin-top:16px;padding-top:12px;border-top:1px solid #334155;display:flex;justify-content:space-between;align-items:center;}
-.timer-lbl{font-size:11px;color:#64748b;}.timer-val{font-size:15px;font-weight:900;color:#f8fafc;}
-.match-btn{border:0;background:#f8fafc;color:#0f172a;padding:9px 16px;border-radius:999px;font-size:12px;font-weight:800;cursor:pointer;display:inline-block;}
+.timer-lbl{font-size:11px;color:#64748b;}.timer-val{font-size:15px;font-weight:900;color:#f8fafc;display:block;}
+.match-timer{display:block;}
+.match-btn{border:0;background:#f8fafc;color:#0f172a;padding:9px 16px;border-radius:999px;font-size:12px;font-weight:800;cursor:pointer;display:inline-block;text-decoration:none;list-style:none;}
 .match-btn:hover{background:#cbd5e1;}
 .scorers-row{display:flex;justify-content:space-between;margin-top:10px;padding:8px 10px;background:#0f172a;border-radius:10px;gap:8px;}
 .scorer{font-size:11px;color:#94a3b8;font-weight:600;width:48%;}.home-scorer{text-align:left;}.away-scorer{text-align:right;}

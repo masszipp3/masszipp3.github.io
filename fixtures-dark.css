@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
+.fixtures-root{max-width:540px;margin:0 auto;padding:24px 14px;background:#0f172a;font-family:Inter,Arial,sans-serif;color:#f8fafc;}
+.day-section{margin-bottom:28px;}
+.day-heading{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#64748b;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #1e293b;}
+.match-card-link{display:block;text-decoration:none;color:inherit;border-radius:20px;transition:transform .15s,box-shadow .15s;}
+.match-card-link:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.35);}
+.match-card{background:#1e293b;border-radius:20px;padding:18px;margin-bottom:14px;border:1px solid #334155;}
+.competition{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.comp-left{display:flex;gap:9px;align-items:center;}
+.comp-icon{width:32px;height:32px;border-radius:50%;background:#0f172a;display:flex;align-items:center;justify-content:center;font-size:16px;overflow:hidden;}
+.comp-icon img{width:100%;height:100%;object-fit:contain;}
+.comp-name{font-size:13px;font-weight:700;color:#f8fafc;}
+.comp-stage{font-size:11px;color:#94a3b8;}
+.badge{font-size:10px;font-weight:800;padding:4px 9px;border-radius:999px;text-transform:uppercase;}
+.badge-live{background:#ef4444;color:#fff;}.badge-ht{background:#f59e0b;color:#fff;}
+.badge-upcoming{background:#1e3a8a;color:#60a5fa;}.badge-finished{background:#334155;color:#cbd5e1;}
+.badge-postponed{background:#78350f;color:#fbbf24;}
+.teams-row{display:flex;justify-content:space-between;align-items:center;}
+.team{width:34%;text-align:center;}
+.logo{width:50px;height:50px;border-radius:50%;background:#0f172a;border:1px solid #334155;display:flex;align-items:center;justify-content:center;margin:0 auto 7px;font-size:22px;overflow:hidden;}
+.logo img{width:100%;height:100%;object-fit:contain;}
+.team-name{font-size:13px;font-weight:800;color:#f8fafc;}
+.center{width:32%;text-align:center;}
+.score{font-size:30px;font-weight:900;color:#f8fafc;}
+.minute{font-size:12px;font-weight:800;color:#22c55e;margin-top:3px;}
+.vs{font-size:24px;font-weight:900;color:#475569;}
+.kickoff{font-size:12px;font-weight:700;color:#94a3b8;margin-top:4px;}
+.match-footer{margin-top:16px;padding-top:12px;border-top:1px solid #334155;display:flex;justify-content:space-between;align-items:center;}
+.timer-lbl{font-size:11px;color:#64748b;}.timer-val{font-size:15px;font-weight:900;color:#f8fafc;}
+.match-btn{border:0;background:#f8fafc;color:#0f172a;padding:9px 16px;border-radius:999px;font-size:12px;font-weight:800;cursor:pointer;display:inline-block;}
+.match-btn:hover{background:#cbd5e1;}
+.scorers-row{display:flex;justify-content:space-between;margin-top:10px;padding:8px 10px;background:#0f172a;border-radius:10px;gap:8px;}
+.scorer{font-size:11px;color:#94a3b8;font-weight:600;width:48%;}.home-scorer{text-align:left;}.away-scorer{text-align:right;}
+.scorer small{background:#1e293b;border-radius:4px;padding:1px 4px;font-size:9px;}
+@media(max-width:420px){.score{font-size:26px;}.logo{width:42px;height:42px;}.team-name{font-size:12px;}}
+
+/* Loading animations */
+.fx-spinner{width:28px;height:28px;border:3px solid rgba(128,128,128,.2);border-top-color:currentColor;border-radius:50%;animation:fx-spin .7s linear infinite;}
+@keyframes fx-spin{to{transform:rotate(360deg)}}
+.fx-shimmer{position:relative;overflow:hidden;background:rgba(128,128,128,.08);border-radius:12px;}
+.fx-shimmer::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.08) 50%,transparent 100%);animation:fx-sh 1.4s ease-in-out infinite;}
+@keyframes fx-sh{0%{transform:translateX(-100%);}100%{transform:translateX(100%)}}
+.live-pulse{animation:lp .8s ease-in-out infinite alternate;}
+@keyframes lp{from{opacity:1;}to{opacity:.5;}}

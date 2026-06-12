@@ -34,7 +34,26 @@
 .scorers-row{display:flex;justify-content:space-between;margin-top:10px;padding:8px 10px;background:#f8fafc;border-radius:10px;gap:8px;}
 .scorer{font-size:11px;color:#475569;font-weight:600;width:48%;}.home-scorer{text-align:left;}.away-scorer{text-align:right;}
 .scorer small{background:#e2e8f0;border-radius:4px;padding:1px 4px;font-size:9px;}
-@media(max-width:420px){.score{font-size:26px;}.logo{width:42px;height:42px;}.team-name{font-size:12px;}}
+@media(max-width:480px){
+  .fixtures-root{padding:12px 6px;}
+  .match-card{padding:12px 10px;border-radius:14px;margin-bottom:10px;}
+  .logo{width:36px;height:36px;font-size:16px;margin-bottom:4px;}
+  .team-name{font-size:11px;line-height:1.2;max-height:2.4em;overflow:hidden;}
+  .score{font-size:22px;}
+  .vs{font-size:18px;}
+  .minute{font-size:10px;}
+  .kickoff{font-size:10px;}
+  .comp-icon{width:26px;height:26px;font-size:12px;}
+  .comp-name{font-size:11px;}
+  .comp-stage{font-size:10px;}
+  .badge{font-size:9px;padding:3px 6px;}
+  .timer-lbl{font-size:10px;}
+  .timer-val{font-size:12px;}
+  .match-btn{padding:7px 12px;font-size:11px;}
+  .scorers-row{padding:6px 8px;font-size:10px;gap:4px;}
+  .scorer{font-size:10px;}
+}
+.match-card-link.inactive{pointer-events:none;cursor:default;}.match-card-link.inactive .match-btn{opacity:0.4;}
 
 /* Loading animations */
 .fx-spinner{width:28px;height:28px;border:3px solid rgba(128,128,128,.2);border-top-color:currentColor;border-radius:50%;animation:fx-spin .7s linear infinite;}

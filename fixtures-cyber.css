@@ -35,23 +35,23 @@
 .scorer{font-size:11px;color:#c7d2fe;font-weight:600;width:48%;}.home-scorer{text-align:left;}.away-scorer{text-align:right;}
 .scorer small{background:#1e1b4b;border-radius:4px;padding:1px 4px;font-size:9px;}
 @media(max-width:480px){
-  .fixtures-root{padding:12px 6px;}
-  .match-card{padding:12px 10px;border-radius:14px;margin-bottom:10px;}
-  .logo{width:36px;height:36px;font-size:16px;margin-bottom:4px;}
-  .team-name{font-size:11px;line-height:1.2;max-height:2.4em;overflow:hidden;}
-  .score{font-size:22px;}
-  .vs{font-size:18px;}
-  .minute{font-size:10px;}
-  .kickoff{font-size:10px;}
-  .comp-icon{width:26px;height:26px;font-size:12px;}
+  .fixtures-root{padding:10px 4px;}
+  .match-card{padding:10px 8px;border-radius:12px;margin-bottom:8px;}
+  .logo{width:30px;height:30px;font-size:14px;margin-bottom:3px;}
+  .team-name{font-size:10px;line-height:1.15;max-height:2.3em;overflow:hidden;}
+  .score{font-size:20px;}
+  .vs{font-size:14px;}
+  .minute{font-size:9px;}
+  .kickoff{font-size:9px;}
+  .comp-icon{width:22px;height:22px;font-size:12px;}
   .comp-name{font-size:11px;}
-  .comp-stage{font-size:10px;}
-  .badge{font-size:9px;padding:3px 6px;}
-  .timer-lbl{font-size:10px;}
-  .timer-val{font-size:12px;}
-  .match-btn{padding:7px 12px;font-size:11px;}
-  .scorers-row{padding:6px 8px;font-size:10px;gap:4px;}
-  .scorer{font-size:10px;}
+  .comp-stage{font-size:9px;}
+  .badge{font-size:8px;padding:2px 6px;}
+  .timer-lbl{font-size:9px;}
+  .timer-val{font-size:11px;}
+  .match-btn{padding:6px 10px;font-size:10px;}
+  .scorers-row{padding:4px 6px;font-size:9px;gap:4px;margin-top:6px;}
+  .scorer{font-size:9px;}
 }
 .match-card-link.inactive{pointer-events:none;cursor:default;}.match-card-link.inactive .match-btn{opacity:0.4;}
 

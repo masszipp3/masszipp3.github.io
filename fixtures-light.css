@@ -58,6 +58,7 @@
   .fx-scorer{font-size:9px;}
 }
 .fx-match-card-link.inactive{pointer-events:none;cursor:default;}.fx-match-card-link.inactive .fx-match-btn{opacity:0.4;}
+.fx-tabs{display:flex;justify-content:space-evenly;align-items:center;margin-bottom:16px;border-bottom:1px solid #e2e8f0;padding-bottom:10px;}.fx-tab{border:0;background:transparent;padding:6px 12px;font-size:13px;font-weight:700;color:#64748b;cursor:pointer;border-radius:8px;transition:all .15s;display:flex;align-items:center;gap:6px;}.fx-tab:hover{background:#e2e8f0;color:#111827;}.fx-tab.fx-active{background:#111827;color:#fff;}.fx-tab-count{font-size:10px;font-weight:800;background:rgba(128,128,128,.15);padding:2px 6px;border-radius:999px;opacity:.8;}.fx-tab.fx-active .fx-tab-count{background:rgba(255,255,255,.2);color:#fff;}
 
 /* Loading animations */
 .fx-spinner{width:28px;height:28px;border:3px solid rgba(128,128,128,.2);border-top-color:currentColor;border-radius:50%;animation:fx-spin .7s linear infinite;}

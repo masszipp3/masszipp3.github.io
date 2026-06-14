@@ -252,6 +252,8 @@
 
   let hls  = null;
   let plyr = null;
+  let _stallWatchdog = null;
+  let _rebuilding = false;
 
   const MAX_HEIGHT = 720;
 
@@ -262,9 +264,9 @@
 
   function showPlayer(){
     clearBootTimeout();
-    clearBootTimeout();
     clearInterval(msgTimer);
     loader.classList.add('off');
+    errBox.classList.remove('on');
     mountWm();
   }
 
@@ -275,12 +277,19 @@
     errBox.classList.add('on');
   }
 
-  const bootTimeout = setTimeout(() => {
+  let bootTimeout = setTimeout(() => {
     showError('Player did not load. Check if the stream URL is valid, CORS is allowed, and the .m3u8 is reachable.');
   }, 12000);
 
   function clearBootTimeout(){
     try { clearTimeout(bootTimeout); } catch(_) {}
+  }
+
+  function resetBootTimeout(){
+    clearBootTimeout();
+    bootTimeout = setTimeout(() => {
+      showError('Player did not load. Check if the stream URL is valid, CORS is allowed, and the .m3u8 is reachable.');
+    }, 12000);
   }
 
   // ── Auto landscape on fullscreen ──
@@ -335,16 +344,55 @@
     });
   }
 
+  // ── Full rebuild of the player (used for hard recovery) ──
+  function rebuildPlayer(reasonMsg){
+    if (_rebuilding) return;
+    _rebuilding = true;
+
+    if (_stallWatchdog) { try { clearInterval(_stallWatchdog); } catch(_){} _stallWatchdog = null; }
+    if (hls)  { try { hls.destroy(); }  catch(_){} hls  = null; }
+    if (plyr) { try { plyr.destroy(); } catch(_){} plyr = null; }
+
+    try { video.removeAttribute('src'); video.load(); } catch(_) {}
+
+    // show loader again while we reconnect
+    loader.classList.remove('off');
+    errBox.classList.remove('on');
+    statusEl.textContent = reasonMsg || 'Reconnecting to stream…';
+    resetBootTimeout();
+
+    // small delay helps avoid hammering the source instantly
+    setTimeout(() => {
+      _rebuilding = false;
+      startPlayback(DIRECT_SRC);
+    }, 500);
+  }
+
   // ── Start Playback ──
   function startPlayback(srcUrl){
     // iOS / Safari native HLS
     if (!Hls.isSupported()){
       if (video.canPlayType('application/vnd.apple.mpegurl')){
         video.src = srcUrl;
+        if (plyr) { try { plyr.destroy(); } catch(_){} plyr = null; }
         plyr = new Plyr(video, {
           controls: ['play-large','play','progress','current-time','mute','volume','settings','fullscreen'],
         });
         video.play().then(showPlayer).catch(showPlayer);
+
+        // basic stall watchdog for native HLS path too
+        let _lastTimeN = -1, _stalledTicksN = 0;
+        _stallWatchdog = setInterval(() => {
+          if (video.paused) return;
+          if (video.currentTime === _lastTimeN) {
+            _stalledTicksN++;
+            if (_stalledTicksN >= 4) {
+              _stalledTicksN = 0;
+              rebuildPlayer('Reconnecting to stream…');
+            }
+          } else { _stalledTicksN = 0; }
+          _lastTimeN = video.currentTime;
+        }, 3000);
       } else {
         showError('Your browser does not support HLS playback.');
       }
@@ -408,11 +456,15 @@
 
     // ── Stall recovery watchdog ──
     let _lastTime = -1, _stalledTicks = 0;
-    const _stallWatchdog = setInterval(() => {
-      if (video.paused || !hls) return;
+    _stallWatchdog = setInterval(() => {
+      if (!hls) return;
+      if (video.paused) { _stalledTicks = 0; _lastTime = video.currentTime; return; }
+
       if (video.currentTime === _lastTime) {
         _stalledTicks++;
+
         if (_stalledTicks === 2) {
+          // try seeking to the live buffer edge first
           try {
             const buf = video.buffered;
             if (buf.length > 0) {
@@ -420,22 +472,33 @@
               if (edge > video.currentTime + 0.3) {
                 video.currentTime = edge - 0.3;
                 video.play().catch(() => {});
-                return;
+              } else {
+                hls.startLoad(-1);
               }
+            } else {
+              hls.startLoad(-1);
             }
-          } catch(_) {}
-          try { hls.startLoad(-1); } catch(_) {}
+          } catch(_) {
+            try { hls.startLoad(-1); } catch(__) {}
+          }
         } else if (_stalledTicks === 3) {
           try { hls.recoverMediaError(); } catch(_) {}
         } else if (_stalledTicks >= 4) {
+          // hard recovery: rebuild the whole player
           _stalledTicks = 0;
-          startPlayback(srcUrl);
+          _lastTime = -1;
+          rebuildPlayer('Reconnecting to stream…');
+          return;
         }
-      } else { _stalledTicks = 0; }
+      } else {
+        _stalledTicks = 0;
+      }
       _lastTime = video.currentTime;
     }, 3000);
 
-    hls.on(Hls.Events.DESTROYING, () => clearInterval(_stallWatchdog));
+    hls.on(Hls.Events.DESTROYING, () => {
+      if (_stallWatchdog) { try { clearInterval(_stallWatchdog); } catch(_){} _stallWatchdog = null; }
+    });
 
     hls.on(Hls.Events.ERROR, (e, data) => {
       if (!data.fatal) return;
@@ -448,7 +511,8 @@
           try { hls.recoverMediaError(); } catch(_){}
           break;
         default:
-          showError('Stream unavailable. Please retry.');
+          // instead of dead-ending in the error screen, attempt a full rebuild
+          rebuildPlayer('Reconnecting to stream…');
       }
     });
   }
@@ -456,6 +520,8 @@
   // ── Tab visibility recovery ──
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) return;
+    if (_rebuilding) return;
+
     let stalled = false;
     try {
       const t = video.currentTime || 0;
@@ -468,10 +534,7 @@
     } catch(e) { stalled = true; }
 
     if (stalled) {
-      if (hls) { try { hls.destroy(); } catch(_) {} hls = null; }
-      if (plyr) { try { plyr.destroy(); } catch(_) {} plyr = null; }
-      try { video.removeAttribute('src'); video.load(); } catch(_) {}
-      startPlayback(DIRECT_SRC);
+      rebuildPlayer('Reconnecting to stream…');
     } else if (video.paused) {
       video.play().catch(() => {});
     } else if (hls && typeof hls.liveSyncPosition === 'number') {

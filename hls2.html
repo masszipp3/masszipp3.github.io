@@ -78,16 +78,6 @@
     }
     #join-btn:hover{color:#fff;border-color:#fff;background:rgba(0,0,0,0.55)}
 
-    /* ── iOS FULLSCREEN BUTTON (shown only on iOS inside iframe) ── */
-    #ios-fs-btn{
-      display:none;
-      position:absolute;bottom:10px;right:10px;z-index:102;
-      background:rgba(0,0,0,0.55);border:1px solid rgba(0,230,118,0.5);
-      color:#fff;border-radius:4px;padding:6px 10px;
-      font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;
-      letter-spacing:1px;cursor:pointer;
-    }
-
     /* ── WATERMARK ── */
     #wm{
       position:absolute;bottom:62px;left:50%;transform:translateX(-50%);
@@ -187,6 +177,25 @@
       cursor:pointer;transition:background .2s,box-shadow .2s
     }
     .err-retry:hover{background:#00c767;box-shadow:0 0 20px var(--red-glow)}
+
+    /* ── iOS FULLSCREEN BUTTON ── */
+    #ios-fs-btn {
+      display: none;
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      z-index: 500;
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(0,230,118,0.5);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -210,9 +219,6 @@
 
   <a id="join-btn" href="https://www.whatsapp.com/channel/0029Vb7Jqva5K3zLauUJSv2s" target="_blank">Join us</a>
 
-  <!-- iOS fallback fullscreen button (shown only on iOS in iframe) -->
-  <button id="ios-fs-btn" onclick="iosFullscreen()">⛶ Fullscreen</button>
-
   <div id="err">
     <div class="err-icon">⚡</div>
     <div class="err-title">Stream Unavailable</div>
@@ -220,7 +226,16 @@
     <button class="err-retry" onclick="location.reload()">Retry</button>
   </div>
 
-  <video id="player" controls playsinline webkit-playsinline x5-playsinline></video>
+  <!-- iOS native fullscreen button (shown only on iOS inside iframe) -->
+  <button id="ios-fs-btn" onclick="iosFullscreen()">⛶ Fullscreen</button>
+
+  <!-- KEY FIX: added webkit-playsinline + x5-playsinline for iOS iframe fullscreen -->
+  <video id="player" controls playsinline
+    webkit-playsinline
+    x5-playsinline
+    x5-video-player-type="h5"
+    x5-video-player-fullscreen="true"
+  ></video>
 </div>
 
 <!-- WATERMARK -->
@@ -235,33 +250,6 @@
 
 <script>
 (function(){
-
-  // ── Detect iOS ──
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-  // ── Detect if inside iframe ──
-  const inIframe = (function(){
-    try { return window.self !== window.top; } catch(e){ return true; }
-  })();
-
-  // Show iOS fullscreen button only when needed
-  if (isIOS && inIframe) {
-    document.getElementById('ios-fs-btn').style.display = 'block';
-  }
-
-  // iOS fullscreen: use native webkitEnterFullscreen on the video element
-  // This works inside iframes on iOS — requestFullscreen() does NOT
-  function iosFullscreen(){
-    const v = document.getElementById('player');
-    if (v.webkitEnterFullscreen) {
-      v.webkitEnterFullscreen();
-    } else if (v.webkitRequestFullscreen) {
-      v.webkitRequestFullscreen();
-    }
-  }
-  window.iosFullscreen = iosFullscreen;
-
-  // ── URL Parameter ──
   const params     = new URLSearchParams(window.location.search);
   const DIRECT_SRC = params.get('url') || params.get('stream') || params.get('get') || params.get('dtv') || params.get('src') || '';
 
@@ -271,6 +259,26 @@
   const errMsg   = document.getElementById('err-msg');
   const statusEl = document.getElementById('ld-status');
   const wm       = document.getElementById('wm');
+  const iosFsBtn = document.getElementById('ios-fs-btn');
+
+  // ── Detect iOS ──
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isInIframe = window.self !== window.top;
+
+  // Show iOS fullscreen button when inside iframe on iOS
+  // because document.fullscreenElement API is blocked in iOS iframes
+  if (isIOS && isInIframe) {
+    iosFsBtn.style.display = 'block';
+  }
+
+  // iOS native fullscreen — uses webkitEnterFullscreen on the video element directly
+  window.iosFullscreen = function() {
+    if (video.webkitEnterFullscreen) {
+      video.webkitEnterFullscreen();
+    } else if (video.requestFullscreen) {
+      video.requestFullscreen().catch(() => {});
+    }
+  };
 
   if (!DIRECT_SRC) {
     errMsg.textContent = 'No stream URL provided. Add ?url=<m3u8-link> to the page URL.';
@@ -327,18 +335,20 @@
     }, 12000);
   }
 
-  // ── Auto landscape on fullscreen (non-iOS) ──
+  // ── Auto landscape on fullscreen ──
   function lockLandscape(){
-    if (isIOS) return; // iOS handles orientation natively
-    const scr = screen.orientation || screen.msOrientation;
-    if (scr && scr.lock) scr.lock('landscape').catch(() => {});
-    else if (screen.lockOrientation) screen.lockOrientation('landscape');
+    try {
+      const scr = screen.orientation || screen.msOrientation;
+      if (scr && scr.lock) scr.lock('landscape').catch(() => {});
+      else if (screen.lockOrientation) screen.lockOrientation('landscape');
+    } catch(e) {}
   }
   function unlockOrientation(){
-    if (isIOS) return;
-    const scr = screen.orientation || screen.msOrientation;
-    if (scr && scr.unlock) scr.unlock();
-    else if (screen.unlockOrientation) screen.unlockOrientation();
+    try {
+      const scr = screen.orientation || screen.msOrientation;
+      if (scr && scr.unlock) scr.unlock();
+      else if (screen.unlockOrientation) screen.unlockOrientation();
+    } catch(e) {}
   }
   document.addEventListener('fullscreenchange', () => {
     if (document.fullscreenElement) lockLandscape(); else unlockOrientation();
@@ -346,6 +356,10 @@
   document.addEventListener('webkitfullscreenchange', () => {
     if (document.webkitFullscreenElement) lockLandscape(); else unlockOrientation();
   });
+
+  // iOS native fullscreen events
+  video.addEventListener('webkitbeginfullscreen', lockLandscape);
+  video.addEventListener('webkitendfullscreen', unlockOrientation);
 
   // ── Build Hls.js ──
   function buildHls(){
@@ -381,7 +395,6 @@
     });
   }
 
-  // ── Full rebuild ──
   function rebuildPlayer(reasonMsg){
     if (_rebuilding) return;
     _rebuilding = true;
@@ -403,31 +416,31 @@
     }, 500);
   }
 
-  // ── Start Playback ──
   function startPlayback(srcUrl){
-
-    // ── iOS: use native HLS (Safari handles it natively, even inside iframe) ──
-    // webkitEnterFullscreen() works on iOS for <video> element directly
-    if (isIOS || !Hls.isSupported()){
-      if (video.canPlayType('application/vnd.apple.mpegurl') || isIOS){
+    // iOS / Safari native HLS
+    if (!Hls.isSupported()){
+      if (video.canPlayType('application/vnd.apple.mpegurl')){
         video.src = srcUrl;
+        if (plyr) { try { plyr.destroy(); } catch(_){} plyr = null; }
+        plyr = new Plyr(video, {
+          controls: ['play-large','play','progress','current-time','mute','volume','fullscreen'],
+        });
 
-        // On iOS inside iframe, skip Plyr and use native controls
-        // because Plyr's fullscreen button calls requestFullscreen() which iOS blocks in iframes
-        if (isIOS && inIframe) {
-          // Use native video controls — iOS native player handles fullscreen properly
-          video.controls = true;
-          video.addEventListener('canplay', showPlayer, { once: true });
-          video.addEventListener('error', () => showError('Stream failed to load.'), { once: true });
-          video.play().then(showPlayer).catch(showPlayer);
-        } else {
-          // Non-iframe iOS or Safari desktop: use Plyr normally
-          if (plyr) { try { plyr.destroy(); } catch(_){} plyr = null; }
-          plyr = new Plyr(video, {
-            controls: ['play-large','play','progress','current-time','mute','volume','settings','fullscreen'],
+        // On iOS inside iframe: Plyr fullscreen button calls requestFullscreen
+        // which is blocked — override it to use webkitEnterFullscreen instead
+        if (isIOS) {
+          plyr.on('ready', () => {
+            const fsBtn = document.querySelector('.plyr__controls button[data-plyr="fullscreen"]');
+            if (fsBtn) {
+              fsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                iosFullscreen();
+              }, true);
+            }
           });
-          video.play().then(showPlayer).catch(showPlayer);
         }
+
+        video.play().then(showPlayer).catch(showPlayer);
 
         let _lastTimeN = -1, _stalledTicksN = 0;
         _stallWatchdog = setInterval(() => {
@@ -447,7 +460,6 @@
       return;
     }
 
-    // ── Non-iOS: hls.js + Plyr ──
     if (hls) { try { hls.destroy(); } catch(e){} hls = null; }
     hls = buildHls();
     hls.loadSource(srcUrl);
@@ -559,7 +571,6 @@
     });
   }
 
-  // ── Tab visibility recovery ──
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) return;
     if (_rebuilding) return;
@@ -587,7 +598,6 @@
     }
   });
 
-  // ── Watermark fade ──
   video.addEventListener('play',  () => { setTimeout(() => { wm.style.opacity = '.30'; }, 3000); });
   video.addEventListener('pause', () => { wm.style.opacity = '.55'; });
   document.addEventListener('mousemove', () => {
@@ -601,7 +611,6 @@
     window._wmTimer = setTimeout(() => { if (!video.paused) wm.style.opacity = '.30'; }, 3000);
   });
 
-  // ── Boot ──
   startPlayback(DIRECT_SRC);
 
 })();

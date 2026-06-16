@@ -78,6 +78,16 @@
     }
     #join-btn:hover{color:#fff;border-color:#fff;background:rgba(0,0,0,0.55)}
 
+    /* ── iOS FULLSCREEN BUTTON (shown only on iOS inside iframe) ── */
+    #ios-fs-btn{
+      display:none;
+      position:absolute;bottom:10px;right:10px;z-index:102;
+      background:rgba(0,0,0,0.55);border:1px solid rgba(0,230,118,0.5);
+      color:#fff;border-radius:4px;padding:6px 10px;
+      font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;
+      letter-spacing:1px;cursor:pointer;
+    }
+
     /* ── WATERMARK ── */
     #wm{
       position:absolute;bottom:62px;left:50%;transform:translateX(-50%);
@@ -200,6 +210,9 @@
 
   <a id="join-btn" href="https://www.whatsapp.com/channel/0029Vb7Jqva5K3zLauUJSv2s" target="_blank">Join us</a>
 
+  <!-- iOS fallback fullscreen button (shown only on iOS in iframe) -->
+  <button id="ios-fs-btn" onclick="iosFullscreen()">⛶ Fullscreen</button>
+
   <div id="err">
     <div class="err-icon">⚡</div>
     <div class="err-title">Stream Unavailable</div>
@@ -207,10 +220,10 @@
     <button class="err-retry" onclick="location.reload()">Retry</button>
   </div>
 
-  <video id="player" controls playsinline></video>
+  <video id="player" controls playsinline webkit-playsinline x5-playsinline></video>
 </div>
 
-<!-- WATERMARK (moved inside .plyr by JS) -->
+<!-- WATERMARK -->
 <div id="wm">
   <div class="wm-rule"></div>
   <div class="wm-inner">
@@ -222,12 +235,35 @@
 
 <script>
 (function(){
+
+  // ── Detect iOS ──
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+  // ── Detect if inside iframe ──
+  const inIframe = (function(){
+    try { return window.self !== window.top; } catch(e){ return true; }
+  })();
+
+  // Show iOS fullscreen button only when needed
+  if (isIOS && inIframe) {
+    document.getElementById('ios-fs-btn').style.display = 'block';
+  }
+
+  // iOS fullscreen: use native webkitEnterFullscreen on the video element
+  // This works inside iframes on iOS — requestFullscreen() does NOT
+  function iosFullscreen(){
+    const v = document.getElementById('player');
+    if (v.webkitEnterFullscreen) {
+      v.webkitEnterFullscreen();
+    } else if (v.webkitRequestFullscreen) {
+      v.webkitRequestFullscreen();
+    }
+  }
+  window.iosFullscreen = iosFullscreen;
+
   // ── URL Parameter ──
-  // Supports: ?url=<m3u8-link>   — primary (easy to remember)
-  //           ?dtv=<m3u8-link>   — alias (backwards compat)
-  //           ?src=<m3u8-link>   — alias
   const params     = new URLSearchParams(window.location.search);
-  const DIRECT_SRC = params.get('url') || params.get('stream') || params.get('get') || params.get('dtv') || params.get('src') || ''; // supports ?url=, ?stream=, ?get=, ?dtv=, ?src=
+  const DIRECT_SRC = params.get('url') || params.get('stream') || params.get('get') || params.get('dtv') || params.get('src') || '';
 
   const video    = document.getElementById('player');
   const loader   = document.getElementById('loader');
@@ -242,7 +278,6 @@
     return;
   }
 
-  // Cycle loading status text
   const MSGS = ['Starting SportsTrack…','Fetching match feed…','Preparing live player…','Almost ready…'];
   let msgIdx = 0;
   const msgTimer = setInterval(() => {
@@ -292,13 +327,15 @@
     }, 12000);
   }
 
-  // ── Auto landscape on fullscreen ──
+  // ── Auto landscape on fullscreen (non-iOS) ──
   function lockLandscape(){
+    if (isIOS) return; // iOS handles orientation natively
     const scr = screen.orientation || screen.msOrientation;
     if (scr && scr.lock) scr.lock('landscape').catch(() => {});
     else if (screen.lockOrientation) screen.lockOrientation('landscape');
   }
   function unlockOrientation(){
+    if (isIOS) return;
     const scr = screen.orientation || screen.msOrientation;
     if (scr && scr.unlock) scr.unlock();
     else if (screen.unlockOrientation) screen.unlockOrientation();
@@ -344,7 +381,7 @@
     });
   }
 
-  // ── Full rebuild of the player (used for hard recovery) ──
+  // ── Full rebuild ──
   function rebuildPlayer(reasonMsg){
     if (_rebuilding) return;
     _rebuilding = true;
@@ -355,13 +392,11 @@
 
     try { video.removeAttribute('src'); video.load(); } catch(_) {}
 
-    // show loader again while we reconnect
     loader.classList.remove('off');
     errBox.classList.remove('on');
     statusEl.textContent = reasonMsg || 'Reconnecting to stream…';
     resetBootTimeout();
 
-    // small delay helps avoid hammering the source instantly
     setTimeout(() => {
       _rebuilding = false;
       startPlayback(DIRECT_SRC);
@@ -370,17 +405,30 @@
 
   // ── Start Playback ──
   function startPlayback(srcUrl){
-    // iOS / Safari native HLS
-    if (!Hls.isSupported()){
-      if (video.canPlayType('application/vnd.apple.mpegurl')){
-        video.src = srcUrl;
-        if (plyr) { try { plyr.destroy(); } catch(_){} plyr = null; }
-        plyr = new Plyr(video, {
-          controls: ['play-large','play','progress','current-time','mute','volume','settings','fullscreen'],
-        });
-        video.play().then(showPlayer).catch(showPlayer);
 
-        // basic stall watchdog for native HLS path too
+    // ── iOS: use native HLS (Safari handles it natively, even inside iframe) ──
+    // webkitEnterFullscreen() works on iOS for <video> element directly
+    if (isIOS || !Hls.isSupported()){
+      if (video.canPlayType('application/vnd.apple.mpegurl') || isIOS){
+        video.src = srcUrl;
+
+        // On iOS inside iframe, skip Plyr and use native controls
+        // because Plyr's fullscreen button calls requestFullscreen() which iOS blocks in iframes
+        if (isIOS && inIframe) {
+          // Use native video controls — iOS native player handles fullscreen properly
+          video.controls = true;
+          video.addEventListener('canplay', showPlayer, { once: true });
+          video.addEventListener('error', () => showError('Stream failed to load.'), { once: true });
+          video.play().then(showPlayer).catch(showPlayer);
+        } else {
+          // Non-iframe iOS or Safari desktop: use Plyr normally
+          if (plyr) { try { plyr.destroy(); } catch(_){} plyr = null; }
+          plyr = new Plyr(video, {
+            controls: ['play-large','play','progress','current-time','mute','volume','settings','fullscreen'],
+          });
+          video.play().then(showPlayer).catch(showPlayer);
+        }
+
         let _lastTimeN = -1, _stalledTicksN = 0;
         _stallWatchdog = setInterval(() => {
           if (video.paused) return;
@@ -399,13 +447,13 @@
       return;
     }
 
+    // ── Non-iOS: hls.js + Plyr ──
     if (hls) { try { hls.destroy(); } catch(e){} hls = null; }
     hls = buildHls();
     hls.loadSource(srcUrl);
     hls.attachMedia(video);
 
     hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      // Cap to MAX_HEIGHT
       const sortedByHeight = hls.levels
         .map((l, i) => ({ idx: i, height: l.height || 0, bw: l.bitrate || 0 }))
         .sort((a, b) => b.height - a.height);
@@ -454,7 +502,6 @@
       video.play().then(showPlayer).catch(showPlayer);
     });
 
-    // ── Stall recovery watchdog ──
     let _lastTime = -1, _stalledTicks = 0;
     _stallWatchdog = setInterval(() => {
       if (!hls) return;
@@ -462,9 +509,7 @@
 
       if (video.currentTime === _lastTime) {
         _stalledTicks++;
-
         if (_stalledTicks === 2) {
-          // try seeking to the live buffer edge first
           try {
             const buf = video.buffered;
             if (buf.length > 0) {
@@ -484,7 +529,6 @@
         } else if (_stalledTicks === 3) {
           try { hls.recoverMediaError(); } catch(_) {}
         } else if (_stalledTicks >= 4) {
-          // hard recovery: rebuild the whole player
           _stalledTicks = 0;
           _lastTime = -1;
           rebuildPlayer('Reconnecting to stream…');
@@ -502,7 +546,6 @@
 
     hls.on(Hls.Events.ERROR, (e, data) => {
       if (!data.fatal) return;
-      console.warn('[Player] fatal', data.type, data.details);
       switch (data.type) {
         case Hls.ErrorTypes.NETWORK_ERROR:
           try { hls.startLoad(); } catch(_){}
@@ -511,7 +554,6 @@
           try { hls.recoverMediaError(); } catch(_){}
           break;
         default:
-          // instead of dead-ending in the error screen, attempt a full rebuild
           rebuildPlayer('Reconnecting to stream…');
       }
     });
@@ -545,7 +587,7 @@
     }
   });
 
-  // ── Watermark fade behaviour ──
+  // ── Watermark fade ──
   video.addEventListener('play',  () => { setTimeout(() => { wm.style.opacity = '.30'; }, 3000); });
   video.addEventListener('pause', () => { wm.style.opacity = '.55'; });
   document.addEventListener('mousemove', () => {

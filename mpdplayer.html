@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -198,7 +197,7 @@
 </div>
 
 <script>
-const CHANNELS = [
+const CHANNELS = const CHANNELS = [
   {
     "name": "SpoTV",
     "group": "Sports",
@@ -645,9 +644,11 @@ const CHANNELS = [
     "clearkey": "893bc63340876605f52886a42e0ccce5:d6c46d2d691056fbd091bf1f01b21a91",
     "slug": "sportza"
   },
-]
+];
 
 let loaderHidden = false;
+let currentChannel = null;
+let mainPlayer = null;
 
 function hideLoader() {
   if (loaderHidden) return;
@@ -663,6 +664,26 @@ function showNotFound(hint) {
   document.getElementById('not-found').classList.add('visible');
 }
 
+// ── LIVE EDGE SEEK HELPER ──
+// Only seek to live edge AFTER the video is actually playing and has buffered
+// data. Seeking too early (before segments load) causes a black screen stall.
+function seekToLiveEdge(video, player) {
+  try {
+    if (!player) return;
+    // Don't seek if video hasn't started playing yet — nothing is buffered
+    if (video.readyState < 2) return;
+    const seekRange = player.seekRange();
+    if (!seekRange) return;
+    const liveEdge = seekRange.end;
+    // Only jump if we're meaningfully behind the edge (>8s) to avoid micro-seeks
+    if (liveEdge && isFinite(liveEdge) && (liveEdge - video.currentTime) > 8) {
+      video.currentTime = Math.max(seekRange.start, liveEdge - 2);
+    }
+  } catch (e) {
+    // seekRange() can throw if called before load settles — ignore
+  }
+}
+
 async function init() {
   shaka.polyfill.installAll();
   if (!shaka.Player.isBrowserSupported()) { hideLoader(); return; }
@@ -675,22 +696,43 @@ async function init() {
   const ch = CHANNELS.find(c => c.slug === slug);
   if (!ch) { showNotFound('?ch=' + slug + ' (not found)'); return; }
 
+  currentChannel = ch;
+  await selectChannel(ch, true);
+}
+
+async function selectChannel(ch, isInitial) {
+  currentChannel = ch;
   document.title = ch.name + ' — SportsTrack';
+
+  if (!isInitial) {
+    loaderHidden = false;
+    const l = document.getElementById('loader');
+    l.style.display = 'flex';
+    l.classList.remove('fade-out');
+  }
+
   setTimeout(hideLoader, 10000);
 
   const video = document.getElementById('main-video');
   const container = document.getElementById('video-container');
-  const player = new shaka.Player(video);
-  const ui = new shaka.ui.Overlay(player, container, video);
-  ui.configure({
-    controlPanelElements: ['play_pause', 'mute', 'volume', 'fullscreen', 'overflow_menu']
-  });
+
+  if (mainPlayer) {
+    try { await mainPlayer.unload(); } catch (e) {}
+  } else {
+    mainPlayer = new shaka.Player(video);
+    const ui = new shaka.ui.Overlay(mainPlayer, container, video);
+    ui.configure({
+      controlPanelElements: ['play_pause', 'mute', 'volume', 'fullscreen', 'overflow_menu']
+    });
+  }
 
   const config = {
     streaming: {
       bufferingGoal: 6,
       rebufferingGoal: 1.5,
       bufferBehind: 20,
+      liveSyncMinLatency: 1,
+      liveSyncMaxLatency: 8,
       retryParameters: {
         maxAttempts: 3,
         baseDelay: 500,
@@ -708,24 +750,35 @@ async function init() {
     }
   }
 
-  player.configure(config);
-  player.addEventListener('error', (e) => { console.error('Player error:', e.detail); hideLoader(); });
+  mainPlayer.configure(config);
+  mainPlayer.addEventListener('error', (e) => { console.error('Player error:', e.detail); hideLoader(); });
   video.addEventListener('playing', hideLoader, { once: true });
 
+  // Seek to live edge only AFTER video has started playing and buffered data exists.
+  // We use the 'playing' event (not 'loadedmetadata' or right after load()) because
+  // seeking before segments are buffered causes a silent black-screen stall.
+  const onFirstPlay = () => {
+    // Small delay to let the buffer fill a little before jumping
+    setTimeout(() => seekToLiveEdge(video, mainPlayer), 800);
+    video.removeEventListener('playing', onFirstPlay);
+  };
+  video.addEventListener('playing', onFirstPlay);
+
   try {
-    await player.load(ch.url);
+    await mainPlayer.load(ch.url);
     video.muted = true;
     await video.play();
     video.muted = false;
-  } catch(e) {
-    try { video.muted = true; await video.play(); } catch(e2) { hideLoader(); }
+  } catch (e) {
+    try {
+      video.muted = true;
+      await video.play();
+    } catch (e2) {
+      hideLoader();
+    }
   }
-}
 
-function showNotFound(hint) {
-  hideLoader();
-  document.getElementById('hint').textContent = hint;
-  document.getElementById('not-found').classList.add('visible');
+  onChannelLoaded();
 }
 
 // ── FLOATING PLAYER ──
@@ -747,16 +800,10 @@ function openFloat() {
   isFloating = true;
   floatChannel = currentChannel;
 
-  // Mirror the main video stream into float video
-  const mainVideo = document.getElementById('main-video');
-  floatVideo.src = mainVideo.src;
-
-  // Re-attach shaka to float video
   initFloatPlayer(floatChannel);
 
   document.getElementById('float-title').textContent = floatChannel.name;
   floatPlayer.classList.add('visible');
-  document.getElementById('float-btn').textContent = '';
   document.getElementById('float-btn').innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor"><path d="M19 11h-8v6h8v-6zm4 8V4.98C23 3.88 22.1 3 21 3H3c-1.1 0-2 .88-2 1.98V19c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zm-2 .02H3V5h18v14.02z"/></svg> Exit Float';
 }
 
@@ -771,7 +818,14 @@ async function initFloatPlayer(ch) {
 
   floatShakaPlayer = new shaka.Player(floatVideo);
 
-  const config = { streaming: { bufferingGoal: 6, rebufferingGoal: 1.5 } };
+  const config = {
+    streaming: {
+      bufferingGoal: 6,
+      rebufferingGoal: 1.5,
+      liveSyncMinLatency: 1,
+      liveSyncMaxLatency: 8
+    }
+  };
   if (ch.clearkey) {
     const parts = ch.clearkey.split(':');
     if (parts.length === 2) config.drm = { clearKeys: { [parts[0]]: parts[1] } };
@@ -782,7 +836,13 @@ async function initFloatPlayer(ch) {
     await floatShakaPlayer.load(ch.url);
     floatVideo.muted = true;
     await floatVideo.play();
-  } catch(e) { console.warn('Float player error:', e); }
+    // Seek to live edge after first play, not before
+    const onFloatPlay = () => {
+      setTimeout(() => seekToLiveEdge(floatVideo, floatShakaPlayer), 800);
+      floatVideo.removeEventListener('playing', onFloatPlay);
+    };
+    floatVideo.addEventListener('playing', onFloatPlay);
+  } catch (e) { console.warn('Float player error:', e); }
 }
 
 function closeFloat() {
@@ -798,8 +858,7 @@ function closeFloat() {
 }
 
 function floatToMain() {
-  // Switch main player back to float channel
-  if (floatChannel) selectChannel(floatChannel);
+  if (floatChannel) selectChannel(floatChannel, false);
   closeFloat();
 }
 
@@ -813,7 +872,6 @@ function toggleFloatPlay() {
   }
 }
 
-// Show float button once a channel is loaded
 function onChannelLoaded() {
   document.getElementById('float-btn').classList.add('visible');
 }
@@ -865,3 +923,6 @@ document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
+
+
+  

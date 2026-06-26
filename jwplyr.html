@@ -9,7 +9,17 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
-    #player { width: 100%; height: 100%; }
+    #player {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      height: -webkit-fill-available;
+    }
+    .jwplayer, .jw-wrapper, .jw-media, .jw-media video {
+      width: 100% !important;
+      height: 100% !important;
+    }
     #err {
       display: none; position: fixed; inset: 0;
       background: #000; color: #888;
@@ -39,7 +49,7 @@
       file:        src,
       type:        "hls",
       width:       "100%",
-      height:      "100%",
+      height:      window.innerHeight + "px",
       autostart:   true,
       controls:    true,
       preload:     "auto",

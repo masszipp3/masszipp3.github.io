@@ -1,0 +1,725 @@
+ChatGPT
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>Hello Sports Player</title>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.6.2/plyr.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+    .player-wrap {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      position: relative;
+    }
+    .player-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+    .plyr--video .plyr__control--overlaid {
+      left: 50% !important;
+      top: 50% !important;
+      transform: translate(-50%, -50%) !important;
+    }
+
+    /* ── HELLOSPORTS watermark ── */
+    #hx-watermark {
+      position: absolute;
+      left: 50%;
+      bottom: 62px;
+      transform: translateX(-50%);
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.42;
+      pointer-events: none;
+      transition: opacity .3s, bottom .3s;
+      font-family: 'Rajdhani', sans-serif;
+      text-align: center;
+    }
+    #hx-watermark .wm-rule {
+      width: 18px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e8001d);
+    }
+    #hx-watermark .wm-rule.right {
+      background: linear-gradient(90deg, #e8001d, transparent);
+    }
+    #hx-watermark .wm-text { display: flex; flex-direction: column; align-items: center; }
+    #hx-watermark .wm-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      letter-spacing: 4px;
+      color: #fff;
+    }
+    #hx-watermark .wm-name .r { color: #e8001d; }
+    #hx-watermark .wm-url {
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: #c8d0da;
+      margin-top: 2px;
+    }
+    .plyr:fullscreen #hx-watermark,
+    .plyr:-webkit-full-screen #hx-watermark {
+      bottom: 70px;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="player-wrap">
+    <video id="player" controls playsinline webkit-playsinline preload="metadata"></video>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://cdn.plyr.io/3.6.2/plyr.polyfilled.js"></script>
+  <script>
+    (function () {
+      const video = document.getElementById('player');
+      const params = new URLSearchParams(location.search);
+      const videoURL = params.get('x');
+      if (!videoURL) return;
+
+      function addWatermark(player) {
+        const wm = document.createElement('div');
+        wm.id = 'hx-watermark';
+        wm.innerHTML =
+          '<span class="wm-rule"></span>' +
+          '<span class="wm-text">' +
+            '<span class="wm-name">HELLO<span class="r">SPORTS</span></span>' +
+            '<span class="wm-url">hellosports.io</span>' +
+          '</span>' +
+          '<span class="wm-rule right"></span>';
+        player.elements.container.appendChild(wm);
+      }
+
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      if (isIOS) {
+        video.src = videoURL;
+        const player = new Plyr(video, {
+          fullscreen: { enabled: true, fallback: true, iosNative: true }
+        });
+        addWatermark(player);
+        return;
+      }
+      if (!Hls.isSupported()) return;
+      const hls = new Hls();
+      hls.loadSource(videoURL);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        const qualities = [];
+        hls.levels.forEach(function (level) {
+          if (!qualities.includes(level.height)) qualities.push(level.height);
+        });
+        qualities.sort(function (a, b) { return b - a; });
+        const player = new Plyr(video, {
+          settings: ['quality', 'speed', 'fullscreen'],
+          fullscreen: { enabled: true, fallback: true, iosNative: true },
+          quality: {
+            default: qualities[0] || 720,
+            options: qualities,
+            forced: true,
+            onChange: function (q) {
+              hls.levels.forEach(function (level, index) {
+                if (level.height === q) hls.currentLevel = index;
+              });
+            }
+          }
+        });
+        addWatermark(player);
+        document.addEventListener('fullscreenchange', () => {
+          if (document.fullscreenElement && screen.orientation?.lock) {
+            screen.orientation.lock('landscape').catch(() => {});
+          } else if (screen.orientation?.unlock) {
+            screen.orientation.unlock();
+          }
+        });
+        video.addEventListener('click', function () {
+          if (player.playing) player.pause();
+          else player.play();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
+
+create a player in sportstrac theme
+
+Here is a complete SportsTrack themed HLS player based on your code. It uses black + neon green style, Sportstrack watermark, loading animation, Plyr controls, quality selector, and mobile fullscreen support.
+
+Use like this:
+
+player.html?x=https://your-domain.com/live/index.m3u8
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="no-referrer" />
+
+  <title>SportsTrack Player</title>
+
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    .st-player-wrap {
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(circle at center, rgba(0, 255, 132, 0.08), transparent 45%),
+        linear-gradient(135deg, #030806 0%, #000 70%);
+      position: relative;
+    }
+
+    .st-player-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+
+    /* Plyr theme */
+    .plyr {
+      width: 100%;
+      height: 100%;
+      --plyr-color-main: #00ff84;
+      --plyr-video-control-color: #ffffff;
+      --plyr-video-control-color-hover: #06120c;
+      --plyr-video-control-background-hover: #00ff84;
+      --plyr-menu-background: #07120d;
+      --plyr-menu-color: #ffffff;
+      --plyr-menu-border-color: rgba(0, 255, 132, 0.25);
+      --plyr-range-fill-background: #00ff84;
+      --plyr-control-radius: 10px;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    .plyr--video .plyr__controls {
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.92),
+        rgba(0, 0, 0, 0.55),
+        transparent
+      ) !important;
+      padding-bottom: 14px !important;
+    }
+
+    .plyr--video .plyr__control--overlaid {
+      left: 50% !important;
+      top: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      background: rgba(0, 255, 132, 0.92) !important;
+      color: #031008 !important;
+      box-shadow: 0 0 30px rgba(0, 255, 132, 0.45);
+    }
+
+    .plyr__control:hover {
+      background: #00ff84 !important;
+      color: #031008 !important;
+    }
+
+    .plyr__menu__container {
+      border: 1px solid rgba(0, 255, 132, 0.25);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Top brand badge */
+    .st-top-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 13px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(0, 255, 132, 0.35);
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+      pointer-events: none;
+    }
+
+    .st-dot {
+      width: 9px;
+      height: 9px;
+      background: #00ff84;
+      border-radius: 50%;
+      box-shadow: 0 0 15px #00ff84;
+    }
+
+    .st-top-badge span {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    .st-top-badge b {
+      color: #00ff84;
+      font-weight: 700;
+    }
+
+    /* SportsTrack watermark */
+    #st-watermark {
+      position: absolute;
+      left: 50%;
+      bottom: 64px;
+      transform: translateX(-50%);
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0.42;
+      pointer-events: none;
+      transition: opacity .3s, bottom .3s;
+      text-align: center;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    #st-watermark .st-wm-rule {
+      width: 24px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #00ff84);
+    }
+
+    #st-watermark .st-wm-rule.right {
+      background: linear-gradient(90deg, #00ff84, transparent);
+    }
+
+    #st-watermark .st-wm-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #st-watermark .st-wm-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      letter-spacing: 4px;
+      color: #ffffff;
+      text-shadow: 0 0 14px rgba(0, 255, 132, 0.35);
+    }
+
+    #st-watermark .st-wm-name .green {
+      color: #00ff84;
+    }
+
+    #st-watermark .st-wm-url {
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: #b7c9c0;
+      margin-top: 2px;
+    }
+
+    .plyr:fullscreen #st-watermark,
+    .plyr:-webkit-full-screen #st-watermark {
+      bottom: 72px;
+      opacity: 0.52;
+    }
+
+    /* Loading overlay */
+    .st-loader {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at center, rgba(0, 255, 132, 0.10), transparent 38%),
+        rgba(0, 0, 0, 0.72);
+      pointer-events: none;
+      transition: opacity .25s ease, visibility .25s ease;
+    }
+
+    .st-loader.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .st-loader-box {
+      text-align: center;
+    }
+
+    .st-spinner {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.14);
+      border-top-color: #00ff84;
+      animation: stSpin 0.85s linear infinite;
+      margin: 0 auto 14px;
+      box-shadow: 0 0 28px rgba(0, 255, 132, 0.22);
+    }
+
+    .st-loader-text {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .st-loader-text span {
+      color: #00ff84;
+    }
+
+    @keyframes stSpin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Error message */
+    .st-error {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      background: #000;
+      color: #fff;
+      text-align: center;
+    }
+
+    .st-error.show {
+      display: flex;
+    }
+
+    .st-error-card {
+      max-width: 420px;
+      padding: 22px;
+      border: 1px solid rgba(0, 255, 132, 0.3);
+      border-radius: 18px;
+      background: rgba(5, 15, 10, 0.92);
+      box-shadow: 0 0 40px rgba(0, 255, 132, 0.12);
+    }
+
+    .st-error-card h3 {
+      color: #00ff84;
+      margin-bottom: 8px;
+      font-size: 22px;
+      letter-spacing: 1px;
+    }
+
+    .st-error-card p {
+      color: #c8d0da;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      .st-top-badge {
+        top: 10px;
+        left: 10px;
+        padding: 6px 10px;
+      }
+
+      .st-top-badge span {
+        font-size: 11px;
+      }
+
+      #st-watermark {
+        bottom: 58px;
+        gap: 7px;
+      }
+
+      #st-watermark .st-wm-name {
+        font-size: 13px;
+        letter-spacing: 3px;
+      }
+
+      #st-watermark .st-wm-url {
+        font-size: 8px;
+        letter-spacing: 2px;
+      }
+
+      #st-watermark .st-wm-rule {
+        width: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="st-player-wrap">
+    <video id="player" controls playsinline webkit-playsinline preload="metadata"></video>
+
+    <div class="st-loader" id="stLoader">
+      <div class="st-loader-box">
+        <div class="st-spinner"></div>
+        <div class="st-loader-text">Loading <span>SportsTrack</span></div>
+      </div>
+    </div>
+
+    <div class="st-error" id="stError">
+      <div class="st-error-card">
+        <h3>Stream Not Available</h3>
+        <p>Please check the stream URL or try again later.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+
+  <script>
+    (function () {
+      const video = document.getElementById('player');
+      const loader = document.getElementById('stLoader');
+      const errorBox = document.getElementById('stError');
+
+      const params = new URLSearchParams(location.search);
+      const videoURL = params.get('x');
+
+      let player = null;
+      let hls = null;
+
+      function showLoader() {
+        loader.classList.remove('hide');
+      }
+
+      function hideLoader() {
+        loader.classList.add('hide');
+      }
+
+      function showError() {
+        hideLoader();
+        errorBox.classList.add('show');
+      }
+
+      function addBranding(plyrPlayer) {
+        if (!plyrPlayer || !plyrPlayer.elements || !plyrPlayer.elements.container) return;
+
+        const container = plyrPlayer.elements.container;
+
+        if (!document.getElementById('stTopBadge')) {
+          const badge = document.createElement('div');
+          badge.className = 'st-top-badge';
+          badge.id = 'stTopBadge';
+          badge.innerHTML = '<i class="st-dot"></i><span>SPORTS<b>TRACK</b></span>';
+          container.appendChild(badge);
+        }
+
+        if (!document.getElementById('st-watermark')) {
+          const wm = document.createElement('div');
+          wm.id = 'st-watermark';
+          wm.innerHTML =
+            '<span class="st-wm-rule"></span>' +
+            '<span class="st-wm-text">' +
+              '<span class="st-wm-name">SPORTS<span class="green">TRACK</span></span>' +
+              '<span class="st-wm-url">sportstrack.live</span>' +
+            '</span>' +
+            '<span class="st-wm-rule right"></span>';
+
+          container.appendChild(wm);
+        }
+      }
+
+      function setupPlayer(qualityOptions) {
+        player = new Plyr(video, {
+          controls: [
+            'play-large',
+            'play',
+            'progress',
+            'current-time',
+            'mute',
+            'volume',
+            'settings',
+            'pip',
+            'airplay',
+            'fullscreen'
+          ],
+          settings: ['quality', 'speed'],
+          speed: {
+            selected: 1,
+            options: [0.75, 1, 1.25, 1.5, 2]
+          },
+          fullscreen: {
+            enabled: true,
+            fallback: true,
+            iosNative: true
+          },
+          quality: {
+            default: qualityOptions[0] || 720,
+            options: qualityOptions,
+            forced: true,
+            onChange: function (quality) {
+              if (!hls) return;
+
+              hls.levels.forEach(function (level, index) {
+                if (level.height === quality) {
+                  hls.currentLevel = index;
+                }
+              });
+            }
+          }
+        });
+
+        addBranding(player);
+      }
+
+      function setupFullscreenOrientation() {
+        document.addEventListener('fullscreenchange', function () {
+          if (document.fullscreenElement && screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('landscape').catch(function () {});
+          } else if (screen.orientation && screen.orientation.unlock) {
+            screen.orientation.unlock();
+          }
+        });
+      }
+
+      if (!videoURL) {
+        showError();
+        return;
+      }
+
+      video.addEventListener('waiting', showLoader);
+      video.addEventListener('stalled', showLoader);
+      video.addEventListener('canplay', hideLoader);
+      video.addEventListener('playing', hideLoader);
+      video.addEventListener('error', showError);
+
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const canPlayNativeHLS = video.canPlayType('application/vnd.apple.mpegurl');
+
+      if (isIOS || canPlayNativeHLS) {
+        video.src = videoURL;
+
+        player = new Plyr(video, {
+          fullscreen: {
+            enabled: true,
+            fallback: true,
+            iosNative: true
+          },
+          controls: [
+            'play-large',
+            'play',
+            'progress',
+            'current-time',
+            'mute',
+            'volume',
+            'settings',
+            'airplay',
+            'fullscreen'
+          ],
+          settings: ['speed']
+        });
+
+        addBranding(player);
+        setupFullscreenOrientation();
+        return;
+      }
+
+      if (!Hls.isSupported()) {
+        showError();
+        return;
+      }
+
+      hls = new Hls({
+        enableWorker: true,
+        lowLatencyMode: true,
+        backBufferLength: 60,
+        maxBufferLength: 30,
+        maxMaxBufferLength: 60
+      });
+
+      hls.loadSource(videoURL);
+      hls.attachMedia(video);
+
+      hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        const qualities = [];
+
+        hls.levels.forEach(function (level) {
+          if (level.height && !qualities.includes(level.height)) {
+            qualities.push(level.height);
+          }
+        });
+
+        qualities.sort(function (a, b) {
+          return b - a;
+        });
+
+        setupPlayer(qualities.length ? qualities : [720, 480, 360]);
+        setupFullscreenOrientation();
+        hideLoader();
+      });
+
+      hls.on(Hls.Events.ERROR, function (event, data) {
+        if (data.fatal) {
+          switch (data.type) {
+            case Hls.ErrorTypes.NETWORK_ERROR:
+              hls.startLoad();
+              break;
+
+            case Hls.ErrorTypes.MEDIA_ERROR:
+              hls.recoverMediaError();
+              break;
+
+            default:
+              showError();
+              hls.destroy();
+              break;
+          }
+        }
+      });
+
+      video.addEventListener('click', function () {
+        if (!player) return;
+
+        if (player.playing) {
+          player.pause();
+        } else {
+          player.play();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+
+Change these two lines to your branding/domain:
+
+<span class="st-wm-url">sportstrack.live</span>
+
+and
+
+<title>SportsTrack Player</title>
+
+also chnage joi n
